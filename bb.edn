@@ -1,0 +1,134 @@
+{:deps  {cprop/cprop {:mvn/version "0.1.17"}}
+ :tasks {:requires    ([babashka.fs :as fs]
+                       [cprop.core :refer [load-config]]
+                       [cprop.source :refer [from-env]])
+         ;; helpers and constants
+         :init        (do
+                        (def ansi-green "\u001B[32m") (def ansi-reset "\u001B[0m") (def ansi-yellow "\u001B[33m")
+                        (def target-folder "target")
+                        (def java-classes-target-folder (str target-folder "/" "classes"))
+                        (def java-src-folder "java/src")
+                        (defn current-date
+                          []
+                          (let [date (java.time.LocalDateTime/now)
+                                formatter (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss")]
+                            (.format date formatter)))
+                        (def config (load-config :file "project-config.edn"))
+                        (def secrets (load-config :file "project-secrets.edn"))
+                        (def env (from-env))
+                        (def version-file "project-version")
+                        (def version-id (clojure.string/trim (slurp version-file)))
+                        (def group-id (:group-id config))
+                        (def artifact-id (:artifact-id config))
+                        (def project-name (:project-name config))
+                        (def uberjar-filename (format "%s/%s-%s-standalone.jar" target-folder artifact-id version-id))
+                        (def jar-filename (format "%s/%s-%s.jar" target-folder artifact-id version-id)))
+         :enter       (let [{:keys [name]} (current-task)] (println (clojure.core/format "%s[ ] %s %s%s" ansi-yellow name (current-date) ansi-reset)))
+         :leave       (let [{:keys [name]} (current-task)] (println (clojure.core/format "%s[✔]︎ %s %s%s" ansi-green name (current-date) ansi-reset)))
+         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+         ;; commands
+         clean        {:doc  "Clean target folder"
+                       :task (do (fs/delete-tree target-folder)
+                                 (fs/create-dir target-folder))}
+
+         build        {:doc  "Build application for this project (standalone uberjar file)"
+                       :task (let [params (format "-X:uberjar :jar %s :group-id %s :artifact-id %s :version '\"%s\"'"
+                                            uberjar-filename
+                                            group-id
+                                            artifact-id
+                                            version-id)]
+                               ;;(run 'javac) ;;uncomment this if you have java sources
+                               (fs/create-dirs target-folder)
+                               (clojure params))}
+
+         install      {:doc  "Install application uberjar file locally (requires the pom.xml file)"
+                       :task (let [params (format "-X:install :installer :local :artifact '\"%s\"'" uberjar-filename)]
+                               (clojure params))}
+
+         deploy       {:doc  "Deploy this application"
+                       :task (println "Application deploy should be implemented (stub).")}
+
+         run          {:doc  "Run application"
+                       :task (do
+                               ;;(run 'javac) ;;uncomment this if you have java sources
+                               (clojure "-M:run"))}
+
+         repl         {:doc  "Run Clojure repl"
+                       :task (do
+                               ;;(run 'javac) ;;uncomment this if you have java sources
+                               (clojure "-M:repl"))}
+
+         outdated     {:doc  "Check for outdated dependencies"
+                       :task (clojure (str "-M:outdated " (apply str (interpose " " *command-line-args*))))}
+
+         bump         {:doc  "Bump version artifact in `project-version` file, level may be one of: major, minor, patch, alpha, beta, rc, release."
+                       :task (let [param (first *command-line-args*)
+                                   level (or (#{"major" "minor" "patch" "alpha" "beta" "rc" "release"} param) "patch")]
+                               (shell {:out version-file} (format "bb -f scripts/bump-semver.clj %s %s" version-id level))
+                               (println version-id "->" (clojure.string/trim (slurp version-file))))}
+
+
+         test         {:doc  "Run tests"
+                       :task (clojure (str "-M:test " (apply str (interpose " " *command-line-args*))))}
+
+         format       {:doc  "Format source code"
+                       :task (do (shell "cljstyle fix"))}
+
+         lint         {:doc  "Lint source code"
+                       :task (do (shell "clj-kondo --parallel --lint src:test:dev/src")
+                                 (shell "cljstyle check"))}
+
+         javac        {:doc  "Compile java sources (if any)"
+                       :task (let [current-classpath (with-out-str (babashka.tasks/clojure "-Spath")) ;; take project classpath from deps.edn
+                                   java-files (map str (fs/glob java-src-folder "**{.java}"))
+                                   javac-options (clojure.core/format "-source 8 -target 8 -Xlint:-options -d %s -cp %s" java-classes-target-folder current-classpath)
+                                   temp-file (fs/delete-on-exit (File/createTempFile "javac" ".txt"))
+                                   java-classes-list (apply str (interpose "\n" java-files))
+                                   javac-cmd (clojure.core/format "javac %s @%s" javac-options (str temp-file))]
+                               (fs/create-dirs java-classes-target-folder)
+                               (println (format "Compiling java sources (%d) from '%s' to '%s' folder..." (count java-files) java-src-folder java-classes-target-folder))
+                               (println javac-cmd)
+                               (spit (str temp-file) java-classes-list)
+                               (println java-classes-list)
+                               (shell javac-cmd))}
+
+         jar          {:doc  "Build thin jar file for this application"
+                       :task (let [params (format "-X:jar :jar %s :group-id %s :artifact-id %s :version '\"%s\"'"
+                                            jar-filename
+                                            group-id
+                                            artifact-id
+                                            version-id)]
+                               ;;(run 'javac) ;;uncomment this if you have java sources
+                               (fs/create-dirs target-folder)
+                               (clojure params))}
+
+         standalone   {:doc  "Create a standalone application with bundled JDK (using jlink, JDK 9+)"
+                       :task (if (nil? (fs/which "jlink"))
+                               (do
+                                 (println "jlink is not installed. Please, install JDK jmod package.\n")
+                                 (System/exit 1))
+                               (let [bundle-name (clojure.core/format "%s-%s" artifact-id version-id)
+                                     bundle-path (clojure.core/format "%s/%s" target-folder bundle-name)
+                                     bundle-jvm-params "-Xmx1g"
+                                     script-body (clojure.core/format "#!/bin/sh\n\nbin/java %s -cp .:./lib/* %s.%s.core" bundle-jvm-params group-id artifact-id)
+                                     script-file (clojure.core/format "%s/start.sh" bundle-path)]
+                                 (println "Create bundle to" bundle-path)
+                                 (fs/delete-tree bundle-path)
+                                 (run 'build)
+                                 (shell (clojure.core/format "jlink --output %s --add-modules java.sql,java.management,jdk.management,java.desktop,java.naming,jdk.unsupported --strip-debug --compress 2 --no-header-files --no-man-pages" bundle-path))
+                                 (shell (clojure.core/format "cp %s %s/lib/" uberjar-filename bundle-path))
+                                 (spit script-file script-body)
+                                 (shell (clojure.core/format "chmod +x %s" script-file))
+                                 (shell (clojure.core/format "tar cvfz %s/%s-%s.tar.gz -C %s %s" target-folder artifact-id version-id target-folder bundle-name))))}
+
+
+         requirements {:doc  "Install project requirements"
+                       :task (let [os-name (clojure.string/lower-case (System/getProperty "os.name"))]
+                               (case os-name
+                                 "mac os x" (do
+                                              (shell "brew install git")
+                                              (shell "brew install coreutils")
+                                              (shell "brew install --cask cljstyle")
+                                              (shell "brew install borkdude/brew/clj-kondo"))
+                                 (println "Please, install manually the following tools: git, cljstyle, clj-kondo")))}
+         }}

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- To make all loggers asynchronous set system property
+-Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector . -->
+<Configuration monitorInterval="30">
+    <properties>
+        <property name="app-name">org.rssys.gantt</property>
+        <property name="pattern-simple">%d{HH:mm:ss.SSS} %-5level - %body %logger{36}%n</property>
+        <property name="pattern-edn">{:time #inst "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}", :level "%level", :logger "%logger{36}", :host "${hostName}", :body %msg}%n</property>
+        <property name="pattern-java">{:time #inst "%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}", :level "%level", :logger "%logger{36}", :host "${hostName}", :body "%msg"}%n</property>
+        <property name="pattern-edn-short">{:t #inst"%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}" :l "%level", :h "${hostName}", :s "%logger{36}", :b %msg}%n</property>
+    </properties>
+
+    <Appenders>
+        <Console name="Console-edn" target="SYSTEM_OUT">
+            <PatternLayout charset="UTF-8">
+                <pattern>${pattern-edn}</pattern>
+            </PatternLayout>
+        </Console>
+        <Console name="Console-java" target="SYSTEM_OUT">
+            <PatternLayout charset="UTF-8">
+                <pattern>${pattern-java}</pattern>
+            </PatternLayout>
+        </Console>
+
+        <!--        <RollingFile name="RollingFile" fileName="log/${app-name}.log" filePattern="log/${app-name}-%d{yyyy-MM-dd}-%i.log.gz">-->
+        <!--            <PatternLayout charset="UTF-8">-->
+        <!--                <pattern>${pattern-edn}</pattern>-->
+        <!--            </PatternLayout>-->
+        <!--            <Policies>-->
+        <!--                <TimeBasedTriggeringPolicy />&lt;!&ndash; Rotated everyday &ndash;&gt;-->
+        <!--                <SizeBasedTriggeringPolicy size="100 MB"/> &lt;!&ndash; Or every 100 MB &ndash;&gt;-->
+        <!--            </Policies>-->
+        <!--            <DefaultRolloverStrategy max="4" compressionLevel="9"/>-->
+        <!--        </RollingFile>-->
+
+    </Appenders>
+
+    <Loggers>
+
+        <Logger name="org.rssys.gantt" level="debug" additivity="false">
+            <AppenderRef ref="Console-edn"/>
+        </Logger>
+
+        <Logger name="io.pedestal.log" level="debug" additivity="false">
+            <AppenderRef ref="Console-edn"/>
+        </Logger>
+
+
+        <Root level="info">
+            <AppenderRef ref="Console-java"/>
+            <!--            <AppenderRef ref="RollingFile"/>-->
+        </Root>
+
+    </Loggers>
+
+</Configuration>

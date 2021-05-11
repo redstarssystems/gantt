@@ -1,0 +1,14 @@
+== Changelog
+
+=== [0.1.0-SNAPSHOT] - 2021-05-04
+
+Initial release.
+
+* basic planning in EDN-format
+* spec for every element in EDN
+* reverse order planning
+* separators support between tasks
+* output content for asciidoc or puml formats
+
+
+==== Added

@@ -1,0 +1,10 @@
+;; Project configuration
+;; Put here your environment variables and public configuration parameters for this project
+{
+ :project-name org.rssys.gantt
+ :group-id     org.rssys
+ :artifact-id  gantt
+ :git/url      ""
+ }
+
+

@@ -1,0 +1,63 @@
+{
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; example with fixed start date and calendar
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ :project-starts "2021-05-01"
+
+ :project-scale  :daily
+
+ :task-colors    {:color/in-progress "GreenYellow/Red"
+                  :color/completed   "GreenYellow/Green"}
+
+ :closed-days    #{:saturday :sunday}
+
+ :holidays       ["2021-05-03" "2021-05-10"]
+
+ :tasks          [{:name             "task1"
+                   :alias            :t1
+                   :days-lasts       10
+                   :percent-complete 100
+                   :starts-at        "2021-05-18"}
+
+                  {:name             "task2"
+                   :alias            :t2
+                   :days-lasts       10
+                   :percent-complete 34
+                   :starts-after     :t1}
+
+                  {:separator "Stage1"}
+
+                  {:name             "task3"
+                   :alias            :t3
+                   :starts-at        "2021-05-06"
+                   :ends-at          "2021-05-18"
+                   :percent-complete 0}
+
+                  {:name             "task4"
+                   :alias            :t4
+                   :starts-after     :t3
+                   :days-lasts       8
+                   :percent-complete 0}
+
+                  {:name              "task5"
+                   :alias             :t5
+                   :days-lasts        10
+                   :percent-complete  0
+                   :starts-before-end [:t2 3]
+                   :color             "Gold/Black"}
+
+                  {:name              "task6"
+                   :alias             :t6
+                   :days-lasts        15
+                   :percent-complete  0
+                   :starts-after-end [:t1 3]
+                   :color             "Green/Black"}]
+
+ :milestones     [{:name          "m1"
+                   :happens-after [:t1]}
+
+                  {:name          "m2"
+                   :happens-after [:t2 :t3]}
+
+                  {:name       "m3"
+                   :happens-at "2021-05-20"}]}

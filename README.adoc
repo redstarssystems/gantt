@@ -1,0 +1,108 @@
+== Clojure wrapper for PlantUML Gantt
+:git:               https://git-scm.com[git]
+:clojure-deps-cli:  https://clojure.org/guides/getting_started[clojure deps cli]
+:clj-new:           https://github.com/seancorfield/clj-new[clj-new]
+:just:              https://github.com/casey/just[just]
+:babashka:          https://github.com/babashka/babashka[babashka]
+:toc:
+
+Project gantt generated from application template https://github.com/redstarssystems/rssysapp.
+
+
+=== Install project prerequisites
+
+All these tools you need to install only once.
+
+. Install {clojure-deps-cli} tools
+.. MacOS
++
+[source,bash]
+----
+brew install clojure/tools/clojure
+----
+.. Linux
++
+Ensure that the following dependencies are installed in OS: `bash`, `curl`, `rlwrap`, and `Java`.
++
+[source, bash]
+----
+curl -O https://download.clojure.org/install/linux-install-1.10.3.822.sh
+chmod +x linux-install-1.10.3.822.sh
+sudo ./linux-install-1.10.3.822.sh
+----
+
+. Install latest {clj-new} library to a file `~/.clojure/deps.edn`
++
+[source, clojure]
+----
+{
+ :aliases {
+           :new     {:extra-deps {seancorfield/clj-new {:mvn/version "1.1.297"}}
+                     :exec-fn    clj-new/create}
+          }
+ }
+----
+
+. Install {babashka}
+.. MacOS
++
+[source, bash]
+----
+brew install borkdude/brew/babashka
+----
++
+.. Linux
++
+[source, bash]
+----
+sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+----
+
+. Run once:
++
+[source,bash]
+----
+just requirements
+----
+to install other necessary tools (MacOS only, for Linux manual instruction).
+
+=== Project workflow
+
+To configure project workflow scripts use `bb.edn`.
+
+To configure project version use file `project-version`.
+
+To configure `group-id` and `artifact-id` for jar file use file `project-config`.
+
+To configure secrets & passwords use file `project-secrets.edn`.
+
+Run `bb tasks` to show help for project workflow.
+
+List of available tasks:
+
+[sources]
+----
+clean        Clean target folder
+build        Build application for this project (standalone uberjar file)
+install      Install application uberjar file locally (requires the pom.xml file)
+deploy       Deploy this application
+run          Run application
+repl         Run Clojure repl
+outdated     Check for outdated dependencies
+bump         Bump version artifact in `project-version` file, level may be one of: major, minor, patch, alpha, beta, rc, release.
+test         Run tests
+format       Format source code
+lint         Lint source code
+javac        Compile java sources (if any)
+jar          Build thin jar file for this application
+standalone   Create a standalone application with bundled JDK (using jlink, JDK 9+)
+requirements Install project requirements
+----
+
+
+=== License
+
+Copyright © 2021 Mikhail Ananev +
+Distributed under the Eclipse Public License 2.0 or (at your option) any later version.
+
+
