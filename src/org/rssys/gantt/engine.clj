@@ -212,9 +212,11 @@
   (let [gantt-struc (edn/read-string (slurp edn-file))]
     (if (m/validate spec/gantt-structure gantt-struc)
       gantt-struc
-      (do
-        (println (format "File %s has invalid structure" edn-file))
-        (println (me/humanize (m/explain spec/gantt-structure gantt-struc)))))))
+      (let [error (first (:errors (m/explain spec/gantt-structure gantt-struc)))
+            msg (format "File %s has invalid structure: %s" edn-file (pr-str error))]
+        (println msg)
+        (throw (ex-info (format "File %s has invalid structure" edn-file)
+                 {:data error}))))))
 
 
 
