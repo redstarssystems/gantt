@@ -1,13 +1,14 @@
 (ns org.rssys.gantt.engine-test
   (:require
+    [babashka.fs :as fs]
     [clojure.test :as test :refer [deftest testing is]]
     [matcho.core :refer [match]]
-    [babashka.fs :as fs]
     [org.rssys.gantt.engine :as sut])
   (:import
     (clojure.lang
       ExceptionInfo)
-    (java.io File)))
+    (java.io
+      File)))
 
 
 (deftest read-gantt-struct-test
@@ -101,7 +102,7 @@
         ex-01-temp-file)
 
       (sut/write-content->file
-        (sut/gantt-content->puml-content gantt-content2 )
+        (sut/gantt-content->puml-content gantt-content2)
         ex-02-temp-file)
 
       (sut/write-content->file
@@ -114,6 +115,4 @@
 
       (fs/delete-if-exists ex-01-temp-file)
       (fs/delete-if-exists ex-02-temp-file)
-      (fs/delete-if-exists ex-03-temp-file)))
-
-  )
+      (fs/delete-if-exists ex-03-temp-file))))

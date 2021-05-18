@@ -51,7 +51,7 @@
          run          {:doc  "Run application"
                        :task (do
                                ;;(run 'javac) ;;uncomment this if you have java sources
-                               (clojure "-M:run"))}
+                               (clojure (str "-M:run " (apply str (interpose " " *command-line-args*)))))}
 
          repl         {:doc  "Run Clojure repl"
                        :task (do

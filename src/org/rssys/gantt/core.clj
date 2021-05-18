@@ -1,7 +1,14 @@
 (ns org.rssys.gantt.core
   (:gen-class)
   (:require
-    [io.pedestal.log :as log]))
+    [babashka.fs :as fs]
+    [clojure.string :as string]
+    [clojure.tools.cli :as cli]
+    [io.pedestal.log :as log]
+    [clojure.java.io :as io])
+  (:import
+    (java.net
+      InetAddress)))
 
 
 (defn set-global-exception-hook
@@ -14,10 +21,91 @@
         (println "uncaught exception" :thread (.getName thread) :desc ex)))))
 
 
+(def cli-options
+  [["-p" "--port PORT" "HTTP server port number"
+    :default 8080
+    :parse-fn #(Integer/parseInt %)
+    :validate [#(< 0 % 0x10000) "Must be a number between 0 and 65536"]]
+
+   ["-H" "--hostname HOST" "HTTP server hostname"
+    :default (InetAddress/getByName "localhost")
+    :default-desc "localhost"
+    :parse-fn #(InetAddress/getByName %)]
+
+   ["-i" "--input-folder FOLDER" "Input folder with EDN-files"
+    :validate [#(fs/directory? %) "Input folder should exist"]]
+
+   ["-o" "--output-folder FOLDER" "Output folder to write Gantt diagrams"
+    :validate [#(fs/directory? %) "Output folder should exist"]]
+
+   ["-r" "--rescan-time SEC" "Time in seconds to rescan changed files in input folder to produce output"
+    :default 30
+    :parse-fn #(Integer/parseInt %)
+    :validate [#(> % 0) "Must be a positive number"]]
+
+   ["-h" "--help"]])
+
+
+(defn usage
+  [options-summary]
+  (->> ["Gantt diagram generator."
+        ""
+        "Usage: program-name [options] action"
+        ""
+        "Options:"
+        options-summary
+        ""
+        "Actions:"
+        "  server   Start HTTP server to show generated Gantt diagrams via HTTP"
+        "  watch    Run watchdog for input folder changes to produce Gantt diagrams to output folder"
+        "  generate Generate Gantt diagrams from input folder to output folder and exit"
+        ""
+        "Please refer to the manual page https://github.com/redstarssystems/gantt for more information."]
+    (string/join \newline)))
+
+
+(defn error-msg
+  [errors]
+  (str "The following errors occurred while parsing your command:\n\n"
+    (string/join \newline errors)))
+
+
+(defn validate-args
+  "Validate command line arguments. Either return a map indicating the program
+  should exit (with a error message, and optional ok status), or a map
+  indicating the action the program should take and the options provided."
+  [args]
+  (let [{:keys [options arguments errors summary]} (cli/parse-opts args cli-options)]
+    (cond
+      (:help options)                                       ; help => exit OK with usage summary
+      {:exit-message (usage summary) :ok? true}
+      errors                                                ; errors => exit with description of errors
+      {:exit-message (error-msg errors)}
+      (not (and (:input-folder options) (:output-folder options)))
+      {:exit-message (error-msg ["input and output folders are mandatory options"])}
+      ;; custom validation on arguments
+      (and (= 1 (count arguments))
+        (#{"server" "watch" "generate"} (first arguments)))
+      {:action (first arguments) :options options}
+      :else                                                 ; failed custom validation => exit with usage summary
+      {:exit-message (usage summary)})))
+
+
+(defn exit
+  [status msg]
+  (println msg)
+  (System/exit status))
+
+
 (defn -main
   "entry point to app."
   [& args]
   (set-global-exception-hook)
-  (log/info :msg "app is started." :args args)
-
+  (let [{:keys [action options exit-message ok?] :as cli-map} (validate-args args)]
+    (if exit-message
+      (exit (if ok? 0 1) exit-message)
+      (case action
+        "server" (println "running http server...")
+        "watch" (println "running watchdog for input folder...")
+        "generate" (println "generating..."))))
   (System/exit 0))
