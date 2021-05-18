@@ -1,0 +1,32 @@
+[plantuml, format=svg]
+----
+@startgantt
+
+projectscale daily
+
+
+[task1] as [t1] lasts 10 days
+[task2] as [t2] lasts 10 days and starts at [t1]'s end
+
+-- Stage1 --
+
+[task3] as [t3] lasts 10 days and starts at [t2]'s end
+[task4] as [t4] lasts 3 days and starts 5 days before [t2]'s end
+[task5] as [t5] lasts 4 days and starts 3 days after [t2]'s end
+
+[t1] is 100% completed
+[t2] is 34% completed
+[t3] is 0% completed
+[t4] is 0% completed
+[t5] is 0% completed
+
+[t3] is colored in Gold/Black
+[t4] is colored in Gold/Black
+[t5] is colored in Gold/Black
+
+[m1] happens after [t1]'s end
+[m2] happens after [t2]'s end
+[m2] happens after [t3]'s end
+
+@endgantt
+----

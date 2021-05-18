@@ -1,4 +1,4 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; the code below is taken from Leiningen
 ;; https://github.com/technomancy/leiningen/blob/master/src/leiningen/release.clj
 
@@ -98,8 +98,9 @@
     (bump-version-map (or level *level*) value)
     (version-map->string)))
 
+
 ;; end of Leiningen code
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 
 
 (let [version (first *command-line-args*)

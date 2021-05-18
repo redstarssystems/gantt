@@ -1,0 +1,25 @@
+{
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; example with fixed start date and calendar
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ :project-starts "2021-05-01"
+
+ :project-scale  :daily
+
+ :task-colors    {:color/in-progress "GreenYellow/Red"
+                  :color/completed   "GreenYellow/Green"}
+
+ :closed-days    #{:saturday :sunday}
+
+ :holidays       ["2021-05-03" "2021-05-10"]
+
+ :tasks          [{:name             "task1"
+                   :alias            :t1
+                   :days-lasts       "10"
+                   :percent-complete 100
+                   :starts-at        "2021-05-18"}
+                  ]
+
+ :milestones     [{:name          "m1"
+                   :happens-after [:t1]}
+                  ]}

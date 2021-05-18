@@ -11,9 +11,9 @@
       LocalDate)))
 
 
-;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; basic types
-;;;;;;;;;;;;;;;;;;;;;;
+;;
 
 ;; not empty string
 (def ne-string [:and [:string] [:fn {:error/message "Should be a not blank string"} (complement #(string/blank? %))]])
@@ -62,9 +62,10 @@
 
 (def holidays [:vector {:description "Holidays" :gen/min 1, :gen/max 3} string-date])
 
-;;;;;;;;;;;;;;;;;;;;;;
+
+;;
 ;; Task types
-;;;;;;;;;;;;;;;;;;;;;;
+;;
 
 
 (def task-name
@@ -100,23 +101,28 @@
   [:and {:description "Task alias which triggers start of the current task"}
    task-alias])
 
+
 (def task-starts-before-end
   [:and {:description "Task alias and number of days before task (alias) ends which triggers start of the current task"
          :gen/gen     (gen/tuple (gen/fmap (fn [v] (keyword (str "task-" v))) (gen/choose 1 10)) (gen/choose 1 7))}
    [:cat task-alias [:> 0]]])
+
 
 (def task-starts-after-end
   [:and {:description "Task alias and number of days after task (alias) ends which triggers start of the current task"
          :gen/gen     (gen/tuple (gen/fmap (fn [v] (keyword (str "task-" v))) (gen/choose 1 10)) (gen/choose 1 7))}
    [:cat task-alias [:> 0]]])
 
+
 (def task-ends-at
   [:and {:description "Task end date"}
    string-date])
 
+
 (def task-ends-at-start
   [:and {:description "Task ends when another task starts"}
    task-alias])
+
 
 (def task-ends-at-end
   [:and {:description "Task ends when another task ends"}
@@ -183,16 +189,19 @@
 
 
 
-(def separator [:map {:optional true}
-                [:separator
-                 {:gen/gen (gen/fmap (fn [x] (str "Stage-" x)) (gen/choose 1 10))}
-                 ne-string]])
+(def separator
+  [:map {:optional true}
+   [:separator
+    {:gen/gen (gen/fmap (fn [x] (str "Stage-" x)) (gen/choose 1 10))}
+    ne-string]])
+
 
 (def task-list [:vector {:gen/min 1, :gen/max 5} [:or task separator]])
 
-;;;;;;;;;;;;;;;;;;;;;;
+
+;;
 ;; Milestone types
-;;;;;;;;;;;;;;;;;;;;;;
+;;
 
 
 (def milestone-name
@@ -223,9 +232,10 @@
         (and happens-after (nil? happens-at))
         (and happens-at (nil? happens-after))))]])
 
-;;;;;;;;;;;;;;;;;;;;;;
+
+;;
 ;; PlantUML Gantt structure
-;;;;;;;;;;;;;;;;;;;;;;
+;;
 
 (def gantt-structure
   [:and

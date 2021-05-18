@@ -25,6 +25,7 @@
              :repl     {:extra-deps  {nrepl/nrepl          {:mvn/version "0.8.3"}
                                       healthsamurai/matcho {:mvn/version "0.3.7"}
                                       criterium/criterium  {:mvn/version "0.4.6"}
+                                      babashka/fs          {:mvn/version "0.0.5"}
                                       hashp/hashp          {:mvn/version "0.2.1"}}
                         :extra-paths ["dev/src" "resources" "test" "test/resources"]
                         :jvm-opts    []
@@ -32,6 +33,7 @@
 
              :test     {:extra-deps  {org.clojure/test.check        {:mvn/version "1.1.0"}
                                       healthsamurai/matcho          {:mvn/version "0.3.7"}
+                                      babashka/fs                   {:mvn/version "0.0.5"}
                                       lambdaisland/kaocha           {:mvn/version "1.0.829"}
                                       lambdaisland/kaocha-cloverage {:mvn/version "1.0.75"}}
                         :extra-paths ["resources" "test" "test/resources"]

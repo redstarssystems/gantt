@@ -50,9 +50,11 @@
       days-lasts [:days-lasts]
       :else (throw (ex-info "Unknown task format" t)))))
 
+
 (defmethod process-task :separator
   [task]
   (format "\n\n-- %s --\n" (:separator task)))
+
 
 (defmethod process-task [:days-lasts]
   [task]
@@ -60,6 +62,7 @@
     (:name task)
     (name (:alias task))
     (:days-lasts task)))
+
 
 (defmethod process-task [:days-lasts :starts-at]
   [task]
@@ -69,6 +72,7 @@
     (:days-lasts task)
     (:starts-at task)))
 
+
 (defmethod process-task [:days-lasts :ends-at-start]
   [task]
   (format "\n[%s] as [%s] lasts %s days and ends at [%s]'s start"
@@ -76,6 +80,7 @@
     (name (:alias task))
     (:days-lasts task)
     (name (:ends-at-start task))))
+
 
 (defmethod process-task [:days-lasts :ends-at-end]
   [task]
@@ -94,6 +99,7 @@
     (:days-lasts task)
     (name (:starts-after task))))
 
+
 (defmethod process-task [:days-lasts :starts-before-end]
   [task]
   (format "\n[%s] as [%s] lasts %s days and starts %s days before [%s]'s end"
@@ -102,6 +108,7 @@
     (:days-lasts task)
     (second (:starts-before-end task))
     (name (first (:starts-before-end task)))))
+
 
 (defmethod process-task [:days-lasts :starts-after-end]
   [task]
@@ -112,6 +119,7 @@
     (second (:starts-after-end task))
     (name (first (:starts-after-end task)))))
 
+
 (defmethod process-task [:starts-at :ends-at]
   [task]
   (format "\n[%s] as [%s] starts %s and ends %s "
@@ -119,6 +127,7 @@
     (name (:alias task))
     (:starts-at task)
     (:ends-at task)))
+
 
 (defn tasks
   [content]
@@ -165,6 +174,8 @@
 
 
 (defn make-gantt-content
+  "Create Gantt content as text from EDN structure.
+  Returns EDN structure."
   [gantt-struc]
   (-> []
     (conj (project-starts-at gantt-struc))
@@ -181,9 +192,10 @@
     (conj \newline)))
 
 
-(defn gantt-content->asciidoc-file
-  [gantt-content filename & {:keys [img-format] :or {img-format :png}}]
-  ;; :png :svg
+(defn gantt-content->asciidoc-content
+  "Wraps Gantt content with Asciidoc header for PlantUML frame.
+  Returns Asciidoc text content as EDN structure."
+  [gantt-content & {:keys [img-format] :or {img-format :png}}]
   (let [out-content (-> []
                       (conj (if (= img-format :png) "[plantuml, format=png]" "[plantuml, format=svg]"))
                       (conj "\n----\n")
@@ -191,20 +203,26 @@
                       (into gantt-content)
                       (conj "\n@endgantt")
                       (conj "\n----\n"))]
-    (try (io/delete-file filename) (catch Exception _))
-    (doseq [i out-content]
-      (spit filename i :append true))))
+    out-content))
 
 
-(defn gantt-content->puml-file
-  [gantt-content filename]
+(defn gantt-content->puml-content
+  "Wraps Gantt content with PUML file header.
+  Returns PUML text content as EDN structure."
+  [gantt-content]
   (let [out-content (-> []
                       (conj "@startgantt\n")
                       (into gantt-content)
                       (conj "\n@endgantt"))]
-    (try (io/delete-file filename) (catch Exception _))
-    (doseq [i out-content]
-      (spit filename i :append true))))
+    out-content))
+
+
+(defn write-content->file
+  "Writes PUML or PlantUML content to a text file."
+  [out-content filename]
+  (try (io/delete-file filename) (catch Exception _))
+  (doseq [i out-content]
+    (spit filename i :append true)))
 
 
 (defn read-gantt-struct
@@ -219,21 +237,18 @@
                  {:data error}))))))
 
 
-
 (comment
-  (def gantt-struc (read-gantt-struct "test/resources/example1.edn"))
+  (def gantt-struc (read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn"))
   (def content (make-gantt-content gantt-struc))
+  (write-content->file (gantt-content->asciidoc-content content) "ex01.adoc")
 
-  (gantt-content->asciidoc-file content "example.adoc" :img-format :svg)
-  (gantt-content->puml-file content "example.puml")
-
-  (def gantt-struc (read-gantt-struct "test/resources/example2.edn"))
+  (def gantt-struc (read-gantt-struct "test/data/ex02-durations-only.edn"))
   (def content (make-gantt-content gantt-struc))
-  (gantt-content->asciidoc-file content "example.adoc" :img-format :svg)
+  (write-content->file (gantt-content->asciidoc-content content) "ex02.adoc")
 
-  (def gantt-struc (read-gantt-struct "test/resources/example3.edn"))
+  (def gantt-struc (read-gantt-struct "test/data/ex03-reverse-order-planning.edn"))
   (def content (make-gantt-content gantt-struc))
-  (gantt-content->asciidoc-file content "example.adoc" :img-format :svg)
+  (write-content->file (gantt-content->asciidoc-content content) "ex03.adoc")
 
   )
 
