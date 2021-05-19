@@ -13,6 +13,25 @@
   (when (:project-starts content)
     (format "\nProject starts %s\n" (:project-starts content))))
 
+(defn project-title
+  [content]
+  (when (:project-title content)
+    (format "\nTitle %s\n" (:project-title content))))
+
+(defn project-header
+  [content]
+  (when (:project-header content)
+    (format "\nHeader %s\n" (:project-header content))))
+
+(defn project-footer
+  [content]
+  (when (:project-footer content)
+    (format "\nFooter %s\n" (:project-footer content))))
+
+(defn hide-footbox
+  [content]
+  (when (:hide-footbox? content)
+    (format "\nHide footbox\n")))
 
 (defn project-scale
   [content]
@@ -179,6 +198,10 @@
   [gantt-struc]
   (-> []
     (conj (project-starts-at gantt-struc))
+    (conj (project-title gantt-struc))
+    (conj (project-header gantt-struc))
+    (conj (project-footer gantt-struc))
+    (conj (hide-footbox gantt-struc))
     (conj (project-scale gantt-struc))
     (into (for [weekend (weekend-days gantt-struc)] weekend))
     (into (for [holiday (holidays gantt-struc)] holiday))
@@ -249,6 +272,12 @@
   (def gantt-struc (read-gantt-struct "test/data/ex03-reverse-order-planning.edn"))
   (def content (make-gantt-content gantt-struc))
   (write-content->file (gantt-content->asciidoc-content content) "ex03.adoc")
+
+  (def gantt-struc (read-gantt-struct "test/data/ex04-header-title-footer.edn"))
+  (def content (make-gantt-content gantt-struc))
+  (write-content->file (gantt-content->asciidoc-content content) "ex04.adoc")
+  (write-content->file (gantt-content->puml-content content) "ex04-header-title-footer.puml")
+
 
   )
 

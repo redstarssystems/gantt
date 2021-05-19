@@ -4,8 +4,7 @@
     [babashka.fs :as fs]
     [clojure.string :as string]
     [clojure.tools.cli :as cli]
-    [io.pedestal.log :as log]
-    [clojure.java.io :as io])
+    [io.pedestal.log :as log])
   (:import
     (java.net
       InetAddress)))

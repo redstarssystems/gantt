@@ -31,6 +31,30 @@
     (fn [^String s]
       (instance? LocalDate (LocalDate/parse s)))]])
 
+(def title
+  [:and
+   {:description "Project title."
+    :gen/gen     (gen/fmap (fn [v] (str "Title-" v)) (gen/choose 1 100))}
+   ne-string])
+
+(def footer
+  [:and
+   {:description "Project footer."
+    :gen/gen     (gen/fmap (fn [v] (str "Footer-" v)) (gen/choose 1 100))}
+   ne-string])
+
+(def header
+  [:and
+   {:description "Project header."
+    :gen/gen     (gen/fmap (fn [v] (str "Header-" v)) (gen/choose 1 100))}
+   ne-string])
+
+
+(def hide-footbox
+  [:and
+   {:description "Enable/disable footbox."}
+   :boolean])
+
 
 (def project-scale [:enum {:description "Project scale"} :daily :monthly :weekly :quarterly :yearly])
 
@@ -241,7 +265,11 @@
   [:and
    [:map
     [:project-starts {:optional true} string-date]
+    [:project-title {:optional true} title]
+    [:project-header {:optional true} header]
+    [:project-footer {:optional true} footer]
     [:project-scale {:optional true} project-scale]
+    [:hide-footbox? {:optional true} hide-footbox]
     [:task-colors {:optional true} task-colors]
     [:closed-days {:optional true} closed-days]
     [:holidays {:optional true} holidays]

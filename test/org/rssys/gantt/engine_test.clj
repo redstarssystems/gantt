@@ -47,18 +47,22 @@
     (let [gantt-struc1    (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
           gantt-struc2    (sut/read-gantt-struct "test/data/ex02-durations-only.edn")
           gantt-struc3    (sut/read-gantt-struct "test/data/ex03-reverse-order-planning.edn")
+          gantt-struc4    (sut/read-gantt-struct "test/data/ex04-header-title-footer.edn")
 
           ex-01-temp-file (str (fs/delete-on-exit (File/createTempFile "ex01-" ".adoc")))
           ex-02-temp-file (str (fs/delete-on-exit (File/createTempFile "ex02-" ".adoc")))
           ex-03-temp-file (str (fs/delete-on-exit (File/createTempFile "ex03-" ".adoc")))
+          ex-04-temp-file (str (fs/delete-on-exit (File/createTempFile "ex04-" ".adoc")))
 
           gantt-content1  (sut/make-gantt-content gantt-struc1)
           gantt-content2  (sut/make-gantt-content gantt-struc2)
           gantt-content3  (sut/make-gantt-content gantt-struc3)
+          gantt-content4  (sut/make-gantt-content gantt-struc4)
 
           ex01-expected-content (slurp "test/data/results/ex01-fixed-dates-calendar.adoc")
           ex02-expected-content (slurp "test/data/results/ex02-durations-only.adoc")
-          ex03-expected-content (slurp "test/data/results/ex03-reverse-order-planning.adoc")]
+          ex03-expected-content (slurp "test/data/results/ex03-reverse-order-planning.adoc")
+          ex04-expected-content (slurp "test/data/results/ex04-header-title-footer.adoc")]
 
       (sut/write-content->file
         (sut/gantt-content->asciidoc-content gantt-content1 :img-format :svg)
@@ -72,30 +76,41 @@
         (sut/gantt-content->asciidoc-content gantt-content3 :img-format :svg)
         ex-03-temp-file)
 
+      (sut/write-content->file
+        (sut/gantt-content->asciidoc-content gantt-content4 :img-format :png)
+        ex-04-temp-file)
+
       (match (slurp ex-01-temp-file) ex01-expected-content)
       (match (slurp ex-02-temp-file) ex02-expected-content)
       (match (slurp ex-03-temp-file) ex03-expected-content)
+      (match (slurp ex-04-temp-file) ex04-expected-content)
 
       (fs/delete-if-exists ex-01-temp-file)
       (fs/delete-if-exists ex-02-temp-file)
-      (fs/delete-if-exists ex-03-temp-file)))
+      (fs/delete-if-exists ex-03-temp-file)
+      (fs/delete-if-exists ex-04-temp-file)
+      ))
 
   (testing "PUML content generates successfully"
     (let [gantt-struc1    (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
           gantt-struc2    (sut/read-gantt-struct "test/data/ex02-durations-only.edn")
           gantt-struc3    (sut/read-gantt-struct "test/data/ex03-reverse-order-planning.edn")
+          gantt-struc4    (sut/read-gantt-struct "test/data/ex04-header-title-footer.edn")
 
           ex-01-temp-file (str (fs/delete-on-exit (File/createTempFile "ex01-" ".puml")))
           ex-02-temp-file (str (fs/delete-on-exit (File/createTempFile "ex02-" ".puml")))
           ex-03-temp-file (str (fs/delete-on-exit (File/createTempFile "ex03-" ".puml")))
+          ex-04-temp-file (str (fs/delete-on-exit (File/createTempFile "ex04-" ".puml")))
 
           gantt-content1  (sut/make-gantt-content gantt-struc1)
           gantt-content2  (sut/make-gantt-content gantt-struc2)
           gantt-content3  (sut/make-gantt-content gantt-struc3)
+          gantt-content4  (sut/make-gantt-content gantt-struc4)
 
           ex01-expected-content (slurp "test/data/results/ex01-fixed-dates-calendar.puml")
           ex02-expected-content (slurp "test/data/results/ex02-durations-only.puml")
-          ex03-expected-content (slurp "test/data/results/ex03-reverse-order-planning.puml")]
+          ex03-expected-content (slurp "test/data/results/ex03-reverse-order-planning.puml")
+          ex04-expected-content (slurp "test/data/results/ex04-header-title-footer.puml")]
 
       (sut/write-content->file
         (sut/gantt-content->puml-content gantt-content1)
@@ -109,10 +124,17 @@
         (sut/gantt-content->puml-content gantt-content3)
         ex-03-temp-file)
 
+      (sut/write-content->file
+        (sut/gantt-content->puml-content gantt-content4)
+        ex-04-temp-file)
+
       (match (slurp ex-01-temp-file) ex01-expected-content)
       (match (slurp ex-02-temp-file) ex02-expected-content)
       (match (slurp ex-03-temp-file) ex03-expected-content)
+      (match (slurp ex-04-temp-file) ex04-expected-content)
 
       (fs/delete-if-exists ex-01-temp-file)
       (fs/delete-if-exists ex-02-temp-file)
-      (fs/delete-if-exists ex-03-temp-file))))
+      (fs/delete-if-exists ex-03-temp-file)
+      (fs/delete-if-exists ex-04-temp-file)
+      )))
