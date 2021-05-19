@@ -11,7 +11,7 @@
       File)))
 
 
-(deftest read-gantt-struct-test
+(deftest ^:unit read-gantt-struct-test
 
   (testing "read correct EDN-data completes successfully"
     (let [correct-edn1 (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
@@ -41,7 +41,7 @@
             (sut/read-gantt-struct "test/data/bad-data/ex01-bad-data.edn"))))))
 
 
-(deftest write-content->file-test
+(deftest ^:unit write-content->file-test
 
   (testing "Asciidoc content generates successfully"
     (let [gantt-struc1    (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
@@ -88,8 +88,7 @@
       (fs/delete-if-exists ex-01-temp-file)
       (fs/delete-if-exists ex-02-temp-file)
       (fs/delete-if-exists ex-03-temp-file)
-      (fs/delete-if-exists ex-04-temp-file)
-      ))
+      (fs/delete-if-exists ex-04-temp-file)))
 
   (testing "PUML content generates successfully"
     (let [gantt-struc1    (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
@@ -136,5 +135,4 @@
       (fs/delete-if-exists ex-01-temp-file)
       (fs/delete-if-exists ex-02-temp-file)
       (fs/delete-if-exists ex-03-temp-file)
-      (fs/delete-if-exists ex-04-temp-file)
-      )))
+      (fs/delete-if-exists ex-04-temp-file))))

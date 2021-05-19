@@ -31,17 +31,20 @@
     (fn [^String s]
       (instance? LocalDate (LocalDate/parse s)))]])
 
+
 (def title
   [:and
    {:description "Project title."
     :gen/gen     (gen/fmap (fn [v] (str "Title-" v)) (gen/choose 1 100))}
    ne-string])
 
+
 (def footer
   [:and
    {:description "Project footer."
     :gen/gen     (gen/fmap (fn [v] (str "Footer-" v)) (gen/choose 1 100))}
    ne-string])
+
 
 (def header
   [:and

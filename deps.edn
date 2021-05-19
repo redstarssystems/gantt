@@ -13,6 +13,9 @@
              ;; file processing
              babashka/fs                               {:mvn/version "0.0.5"}
 
+             ;; PlantUML
+             net.sourceforge.plantuml/plantuml         {:mvn/version "1.2021.6"}
+
              ;; Command-line processing
              org.clojure/tools.cli                     {:mvn/version "1.0.206"}
 

@@ -3,8 +3,7 @@
   (:require
     [babashka.fs :as fs]
     [clojure.string :as string]
-    [clojure.tools.cli :as cli]
-    [io.pedestal.log :as log])
+    [clojure.tools.cli :as cli])
   (:import
     (java.net
       InetAddress)))
@@ -100,7 +99,7 @@
   "entry point to app."
   [& args]
   (set-global-exception-hook)
-  (let [{:keys [action options exit-message ok?] :as cli-map} (validate-args args)]
+  (let [{:keys [action options exit-message ok?]} (validate-args args)]
     (if exit-message
       (exit (if ok? 0 1) exit-message)
       (case action

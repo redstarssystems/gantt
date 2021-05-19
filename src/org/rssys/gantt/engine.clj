@@ -1,11 +1,16 @@
 (ns org.rssys.gantt.engine
   (:require
+    [babashka.fs :as fs]
     [clojure.edn :as edn]
     [clojure.java.io :as io]
     [clojure.string :as string]
     [malli.core :as m]
-    [malli.error :as me]
-    [org.rssys.gantt.spec :as spec]))
+    [org.rssys.gantt.spec :as spec])
+  (:import
+    (net.sourceforge.plantuml
+      FileFormat
+      FileFormatOption
+      SourceStringReader)))
 
 
 (defn project-starts-at
@@ -13,25 +18,30 @@
   (when (:project-starts content)
     (format "\nProject starts %s\n" (:project-starts content))))
 
+
 (defn project-title
   [content]
   (when (:project-title content)
     (format "\nTitle %s\n" (:project-title content))))
+
 
 (defn project-header
   [content]
   (when (:project-header content)
     (format "\nHeader %s\n" (:project-header content))))
 
+
 (defn project-footer
   [content]
   (when (:project-footer content)
     (format "\nFooter %s\n" (:project-footer content))))
 
+
 (defn hide-footbox
   [content]
   (when (:hide-footbox? content)
     (format "\nHide footbox\n")))
+
 
 (defn project-scale
   [content]
@@ -241,7 +251,7 @@
 
 
 (defn write-content->file
-  "Writes PUML or PlantUML content to a text file."
+  "Writes PUML or PlantUML text content to a text file."
   [out-content filename]
   (try (io/delete-file filename) (catch Exception _))
   (doseq [i out-content]
@@ -249,15 +259,34 @@
 
 
 (defn read-gantt-struct
+  "Read EDN-file and validate fo spec."
   [edn-file]
   (let [gantt-struc (edn/read-string (slurp edn-file))]
     (if (m/validate spec/gantt-structure gantt-struc)
       gantt-struc
       (let [error (first (:errors (m/explain spec/gantt-structure gantt-struc)))
-            msg (format "File %s has invalid structure: %s" edn-file (pr-str error))]
+            msg   (format "File %s has invalid structure: %s" edn-file (pr-str error))]
         (println msg)
         (throw (ex-info (format "File %s has invalid structure" edn-file)
                  {:data error}))))))
+
+
+(defn generate-gantt-picture
+  "Generate Gantt diagram from PUML file.
+  Supported output formats: `png` (default) and `svg`.
+  Returns map with output filename."
+  [puml-filename & {:keys [img-format output-folder]
+                    :or   {img-format    :png
+                           output-folder (str "." fs/file-separator)}}]
+  (let [puml-string   ^String (slurp puml-filename)
+        puml-reader   (SourceStringReader. puml-string)
+        filename-only (fs/file-name puml-filename)
+        out-extension (case img-format :png ".png" :svg ".svg" ".png")
+        out-filename  (str (fs/absolutize (str output-folder fs/file-separator filename-only out-extension)))
+        baos          (io/output-stream out-filename)
+        _             (.outputImage puml-reader baos (FileFormatOption. (case img-format :png FileFormat/PNG :svg FileFormat/SVG)))]
+    (.close baos)
+    {:output-filename out-filename}))
 
 
 (comment
@@ -278,6 +307,8 @@
   (write-content->file (gantt-content->asciidoc-content content) "ex04.adoc")
   (write-content->file (gantt-content->puml-content content) "ex04-header-title-footer.puml")
 
+  (generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :svg)
+  (generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :png :output-folder "./test")
 
   )
 
