@@ -44,20 +44,20 @@
 (deftest ^:unit write-content->file-test
 
   (testing "Asciidoc content generates successfully"
-    (let [gantt-struc1    (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
-          gantt-struc2    (sut/read-gantt-struct "test/data/ex02-durations-only.edn")
-          gantt-struc3    (sut/read-gantt-struct "test/data/ex03-reverse-order-planning.edn")
-          gantt-struc4    (sut/read-gantt-struct "test/data/ex04-header-title-footer.edn")
+    (let [gantt-struc1          (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
+          gantt-struc2          (sut/read-gantt-struct "test/data/ex02-durations-only.edn")
+          gantt-struc3          (sut/read-gantt-struct "test/data/ex03-reverse-order-planning.edn")
+          gantt-struc4          (sut/read-gantt-struct "test/data/ex04-header-title-footer.edn")
 
-          ex-01-temp-file (str (fs/delete-on-exit (File/createTempFile "ex01-" ".adoc")))
-          ex-02-temp-file (str (fs/delete-on-exit (File/createTempFile "ex02-" ".adoc")))
-          ex-03-temp-file (str (fs/delete-on-exit (File/createTempFile "ex03-" ".adoc")))
-          ex-04-temp-file (str (fs/delete-on-exit (File/createTempFile "ex04-" ".adoc")))
+          ex-01-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex01-" ".adoc")))
+          ex-02-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex02-" ".adoc")))
+          ex-03-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex03-" ".adoc")))
+          ex-04-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex04-" ".adoc")))
 
-          gantt-content1  (sut/make-gantt-content gantt-struc1)
-          gantt-content2  (sut/make-gantt-content gantt-struc2)
-          gantt-content3  (sut/make-gantt-content gantt-struc3)
-          gantt-content4  (sut/make-gantt-content gantt-struc4)
+          gantt-content1        (sut/make-gantt-content gantt-struc1)
+          gantt-content2        (sut/make-gantt-content gantt-struc2)
+          gantt-content3        (sut/make-gantt-content gantt-struc3)
+          gantt-content4        (sut/make-gantt-content gantt-struc4)
 
           ex01-expected-content (slurp "test/data/results/ex01-fixed-dates-calendar.adoc")
           ex02-expected-content (slurp "test/data/results/ex02-durations-only.adoc")
@@ -91,20 +91,20 @@
       (fs/delete-if-exists ex-04-temp-file)))
 
   (testing "PUML content generates successfully"
-    (let [gantt-struc1    (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
-          gantt-struc2    (sut/read-gantt-struct "test/data/ex02-durations-only.edn")
-          gantt-struc3    (sut/read-gantt-struct "test/data/ex03-reverse-order-planning.edn")
-          gantt-struc4    (sut/read-gantt-struct "test/data/ex04-header-title-footer.edn")
+    (let [gantt-struc1          (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
+          gantt-struc2          (sut/read-gantt-struct "test/data/ex02-durations-only.edn")
+          gantt-struc3          (sut/read-gantt-struct "test/data/ex03-reverse-order-planning.edn")
+          gantt-struc4          (sut/read-gantt-struct "test/data/ex04-header-title-footer.edn")
 
-          ex-01-temp-file (str (fs/delete-on-exit (File/createTempFile "ex01-" ".puml")))
-          ex-02-temp-file (str (fs/delete-on-exit (File/createTempFile "ex02-" ".puml")))
-          ex-03-temp-file (str (fs/delete-on-exit (File/createTempFile "ex03-" ".puml")))
-          ex-04-temp-file (str (fs/delete-on-exit (File/createTempFile "ex04-" ".puml")))
+          ex-01-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex01-" ".puml")))
+          ex-02-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex02-" ".puml")))
+          ex-03-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex03-" ".puml")))
+          ex-04-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex04-" ".puml")))
 
-          gantt-content1  (sut/make-gantt-content gantt-struc1)
-          gantt-content2  (sut/make-gantt-content gantt-struc2)
-          gantt-content3  (sut/make-gantt-content gantt-struc3)
-          gantt-content4  (sut/make-gantt-content gantt-struc4)
+          gantt-content1        (sut/make-gantt-content gantt-struc1)
+          gantt-content2        (sut/make-gantt-content gantt-struc2)
+          gantt-content3        (sut/make-gantt-content gantt-struc3)
+          gantt-content4        (sut/make-gantt-content gantt-struc4)
 
           ex01-expected-content (slurp "test/data/results/ex01-fixed-dates-calendar.puml")
           ex02-expected-content (slurp "test/data/results/ex02-durations-only.puml")
@@ -136,3 +136,25 @@
       (fs/delete-if-exists ex-02-temp-file)
       (fs/delete-if-exists ex-03-temp-file)
       (fs/delete-if-exists ex-04-temp-file))))
+
+(deftest ^:unit generate-gantt-picture-test
+
+  (testing "PNG generated from PUML file successfully"
+    (let [temp-dir (fs/create-temp-dir {:prefix "puml-"})]
+      (try
+        (let [result (sut/generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :png :output-folder (str temp-dir))]
+          (match (fs/extension (:output-filename result)) "png")
+          (match (fs/size (:output-filename result)) pos-int?))
+        (finally
+          (fs/delete-tree temp-dir)))))
+
+  (testing "SVG generated from PUML file successfully"
+    (let [temp-dir (fs/create-temp-dir {:prefix "puml-"})]
+      (try
+        (let [result (sut/generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :svg :output-folder (str temp-dir))]
+          (match (fs/extension (:output-filename result)) "svg")
+          (match (fs/size (:output-filename result)) pos-int?))
+        (finally
+          (fs/delete-tree temp-dir)))))
+
+  )
