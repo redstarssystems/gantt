@@ -1,1 +1,30 @@
-(ns org.rssys.gantt.files)
+(ns org.rssys.gantt.files
+  (:require [babashka.fs :as fs]
+            [org.rssys.gantt.engine :as engine]
+            [io.pedestal.log :as log])
+  (:import (java.io File)))
+
+(defn- generate-gantt-from-edn
+  "Process EDN file to PNG/SVG file and save it to output folder"
+  [^String edn-filename ^String output-folder ^String file-format]
+  (let [edn-content   (engine/read-gantt-struct edn-filename)
+        gantt-content (engine/make-gantt-content edn-content)
+        puml-content  (engine/gantt-content->puml-content gantt-content)
+        temp-filename (str (fs/delete-on-exit (File/createTempFile "gantt-" ".puml")))]
+    (engine/write-content->file puml-content temp-filename)
+    (engine/generate-gantt-picture temp-filename :img-format (keyword file-format) :output-folder output-folder
+      :output-filename edn-filename)))
+
+(defn generate
+  "Generate Gantt diagrams for data from input folder and put generated picture to output folder"
+  [{:keys [input-folder output-folder file-format]}]
+  (let [input-files-list (fs/glob input-folder "**{.edn}")]
+    (doseq [edn-file input-files-list]
+      (try
+        (println "processing file:" (str edn-file))
+        (let [result (generate-gantt-from-edn (str edn-file) output-folder file-format)]
+          (println "generated file:" (:output-filename result)  \newline))
+        (catch Exception e
+          (println (.getMessage e) \newline))))))
+
+

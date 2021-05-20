@@ -275,12 +275,12 @@
   "Generate Gantt diagram from PUML file.
   Supported output formats: `png` (default) and `svg`.
   Returns map with output filename."
-  [puml-filename & {:keys [img-format output-folder]
+  [puml-filename & {:keys [img-format output-folder output-filename]
                     :or   {img-format    :png
                            output-folder (str "." fs/file-separator)}}]
   (let [puml-string   ^String (slurp puml-filename)
         puml-reader   (SourceStringReader. puml-string)
-        filename-only (fs/file-name puml-filename)
+        filename-only (if output-filename (fs/file-name output-filename) (fs/file-name puml-filename))
         out-extension (case img-format :png ".png" :svg ".svg" ".png")
         out-filename  (str (fs/absolutize (str output-folder fs/file-separator filename-only out-extension)))
         baos          (io/output-stream out-filename)

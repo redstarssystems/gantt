@@ -16,6 +16,9 @@
              ;; PlantUML
              net.sourceforge.plantuml/plantuml         {:mvn/version "1.2021.6"}
 
+             ;; file changes events
+             hawk/hawk                                 {:mvn/version "0.2.11"}
+
              ;; Command-line processing
              org.clojure/tools.cli                     {:mvn/version "1.0.206"}
 

@@ -3,7 +3,8 @@
   (:require
     [babashka.fs :as fs]
     [clojure.string :as string]
-    [clojure.tools.cli :as cli])
+    [clojure.tools.cli :as cli]
+    [org.rssys.gantt.files :as files])
   (:import
     (java.net
       InetAddress)))
@@ -25,7 +26,7 @@
     :parse-fn #(Integer/parseInt %)
     :validate [#(< 0 % 0x10000) "Must be a number between 0 and 65536"]]
 
-   ["-H" "--hostname HOST" "HTTP server hostname"
+   ["-s" "--server HOST" "start HTTP server using this hostname"
     :default (InetAddress/getByName "localhost")
     :default-desc "localhost"
     :parse-fn #(InetAddress/getByName %)]
@@ -33,13 +34,12 @@
    ["-i" "--input-folder FOLDER" "Input folder with EDN-files"
     :validate [#(fs/directory? %) "Input folder should exist"]]
 
+   ["-f" "--file-format FORMAT" "PNG or SVG format for output files"
+    :default "png"
+    :validate [#(some #{"png" "svg"} [%]) "Should be `png` or `svg`."]]
+
    ["-o" "--output-folder FOLDER" "Output folder to write Gantt diagrams"
     :validate [#(fs/directory? %) "Output folder should exist"]]
-
-   ["-r" "--rescan-time SEC" "Time in seconds to rescan changed files in input folder to produce output"
-    :default 30
-    :parse-fn #(Integer/parseInt %)
-    :validate [#(> % 0) "Must be a positive number"]]
 
    ["-h" "--help"]])
 
@@ -105,5 +105,5 @@
       (case action
         "server" (println "running http server...")
         "watch" (println "running watchdog for input folder...")
-        "generate" (println "generating..."))))
+        "generate" (files/generate options))))
   (System/exit 0))
