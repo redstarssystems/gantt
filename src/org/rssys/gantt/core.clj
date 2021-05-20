@@ -39,7 +39,7 @@
     :validate [#(some #{"png" "svg"} [%]) "Should be `png` or `svg`."]]
 
    ["-o" "--output-folder FOLDER" "Output folder to write Gantt diagrams"
-    :validate [#(fs/directory? %) "Output folder should exist"]]
+    :validate [#(or (= % ":input-folder") (fs/directory? %)) "Output folder should exist or use value `:input-folder` to put result in input folder"]]
 
    ["-h" "--help"]])
 
@@ -99,11 +99,14 @@
   "entry point to app."
   [& args]
   (set-global-exception-hook)
-  (let [{:keys [action options exit-message ok?]} (validate-args args)]
+  (let [{:keys [action options exit-message ok?]} (validate-args args)
+        options (if (= ":input-folder" (:output-folder options ))
+                  (assoc options :output-folder (:input-folder options))
+                  options)]
     (if exit-message
       (exit (if ok? 0 1) exit-message)
       (case action
         "server" (println "running http server...")
-        "watch" (println "running watchdog for input folder...")
+        "watch" (files/watch options)
         "generate" (files/generate options))))
   (System/exit 0))

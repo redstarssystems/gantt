@@ -1,7 +1,8 @@
 (ns org.rssys.gantt.files
   (:require
     [babashka.fs :as fs]
-    [org.rssys.gantt.engine :as engine])
+    [org.rssys.gantt.engine :as engine]
+    [hawk.core :as hawk])
   (:import
     (java.io
       File)))
@@ -34,3 +35,18 @@
           (println (.getMessage e) \newline))))))
 
 
+(defn watch
+  "Catch file changes in folders and generate Gantt diagrams for them"
+  [{:keys [input-folder output-folder file-format]}]
+  (println "Starting watchdog for folder:" input-folder)
+  (hawk/watch! [{:paths   [input-folder]
+                 :filter  (fn [ctx e] (and (fs/regular-file? (:file e)) (= "edn" (fs/extension (:file e)))))
+                 :handler (fn [ctx e]
+                            (when (some #{:create :modify} [(:kind e)])
+                              (try
+                                (let [result (generate-gantt-from-edn (str (:file e)) output-folder file-format)]
+                                  (println "generated file:" (:output-filename result) \newline))
+                                (catch Exception e
+                                  (println (.getMessage e) \newline)))))}])
+  (println "Press <Enter> to exit.")
+  (read-line))
