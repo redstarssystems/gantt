@@ -1,7 +1,8 @@
 {
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- ;; example title, header, footer, footbox
+ ;; example scale, title, header, footer, footbox
  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ :scale "1200*900"
  :project-scale :daily
  :project-title "Title1"
  :project-header "Header1"

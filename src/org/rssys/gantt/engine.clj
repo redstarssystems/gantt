@@ -19,6 +19,11 @@
     (format "\nProject starts %s\n" (:project-starts content))))
 
 
+(defn scale
+  [content]
+  (when (:scale content)
+    (format "\nscale %s\n" (:scale content))))
+
 (defn project-title
   [content]
   (when (:project-title content)
@@ -208,6 +213,7 @@
   [gantt-struc]
   (-> []
     (conj (project-starts-at gantt-struc))
+    (conj (scale gantt-struc))
     (conj (project-title gantt-struc))
     (conj (project-header gantt-struc))
     (conj (project-footer gantt-struc))

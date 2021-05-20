@@ -27,6 +27,11 @@
     (fn [^String s]
       (instance? LocalDate (LocalDate/parse s)))]])
 
+(def scale
+  [:and
+   {:description "SVG/PNG image size."
+    :gen/gen     (gen/return "1200*900")}
+   ne-string])
 
 (def title
   [:and
@@ -263,6 +268,7 @@
 (def gantt-structure
   [:and
    [:map
+    [:scale {:optional true} scale]
     [:project-starts {:optional true} string-date]
     [:project-title {:optional true} title]
     [:project-header {:optional true} header]
