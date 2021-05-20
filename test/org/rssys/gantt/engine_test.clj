@@ -137,6 +137,7 @@
       (fs/delete-if-exists ex-03-temp-file)
       (fs/delete-if-exists ex-04-temp-file))))
 
+
 (deftest ^:unit generate-gantt-picture-test
 
   (testing "PNG generated from PUML file successfully"
@@ -155,6 +156,4 @@
           (match (fs/extension (:output-filename result)) "svg")
           (match (fs/size (:output-filename result)) pos-int?))
         (finally
-          (fs/delete-tree temp-dir)))))
-
-  )
+          (fs/delete-tree temp-dir))))))

@@ -1,11 +1,7 @@
 (ns org.rssys.gantt.spec
   (:require
     [clojure.spec.gen.alpha :as gen]
-    [clojure.string :as string]
-    [malli.core :as m]
-    [malli.error :as me]
-    [malli.generator :as mg]
-    [malli.util :as mu])
+    [clojure.string :as string])
   (:import
     (java.time
       LocalDate)))
