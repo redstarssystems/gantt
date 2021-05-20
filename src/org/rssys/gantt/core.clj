@@ -99,10 +99,7 @@
   "entry point to app."
   [& args]
   (set-global-exception-hook)
-  (let [{:keys [action options exit-message ok?]} (validate-args args)
-        options (if (= ":input-folder" (:output-folder options ))
-                  (assoc options :output-folder (:input-folder options))
-                  options)]
+  (let [{:keys [action options exit-message ok?]} (validate-args args)]
     (if exit-message
       (exit (if ok? 0 1) exit-message)
       (case action

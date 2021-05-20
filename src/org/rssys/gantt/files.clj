@@ -13,6 +13,9 @@
   [^String edn-filename ^String output-folder ^String file-format]
   (let [edn-content   (engine/read-gantt-struct edn-filename)
         gantt-content (engine/make-gantt-content edn-content)
+        output-folder (if (= ":input-folder" output-folder)
+                        (fs/parent edn-filename)
+                        output-folder)
         puml-content  (engine/gantt-content->puml-content gantt-content)
         temp-filename (str (fs/delete-on-exit (File/createTempFile "gantt-" ".puml")))
         _             (engine/write-content->file puml-content temp-filename)
@@ -50,3 +53,4 @@
                                   (println (.getMessage e) \newline)))))}])
   (println "Press <Enter> to exit.")
   (read-line))
+
