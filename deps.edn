@@ -31,7 +31,7 @@
  :aliases   {
              :run      {:extra-paths ["resources"]
                         :jvm-opts    ["-DLOG4J_CONFIGURATION_FILE=resources/log4j2.xml"
-                                      "-Duser.timezone=UTC"]
+                                      ]
                         :main-opts   ["--main" "org.rssys.gantt.core"]}
 
              :repl     {:extra-deps  {nrepl/nrepl          {:mvn/version "0.8.3"}
