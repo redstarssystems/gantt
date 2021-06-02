@@ -226,9 +226,15 @@
   (when (:project-content content)
     (for [task (:project-content content)]
       (when (:task task)
-        (format "[%s] is %s%% completed\n"
-          (name (:alias task))
-          (:percent-complete task))))))
+        (if (seq (:resources task))
+          (format "[%s] on %s is %s%% completed\n"
+            (name (:alias task))
+            (apply str (for [r (:resources task)]
+                         (format "{%s} " r)))
+            (:percent-complete task))
+          (format "[%s] is %s%% completed\n"
+            (name (:alias task))
+            (:percent-complete task)))))))
 
 
 (defn task-colored
@@ -377,6 +383,11 @@
   (def content (make-gantt-content gantt-struc))
   (write-content->file (gantt-content->asciidoc-content content) "06-pause-days-for-task.adoc")
   (write-content->file (gantt-content->puml-content content) "06-pause-days-for-task.puml")
+
+  (def gantt-struc (read-gantt-struct "test/data/07-task-resources.edn"))
+  (def content (make-gantt-content gantt-struc))
+  (write-content->file (gantt-content->asciidoc-content content) "07-task-resources.adoc")
+  (write-content->file (gantt-content->puml-content content) "07-task-resources.puml")
 
 
   (generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :svg)

@@ -48,21 +48,24 @@
                                         "test/data/03-reverse-order-planning.edn"
                                         "test/data/04-header-title-footer.edn"
                                         "test/data/05-colored-named-days.edn"
-                                        "test/data/06-pause-days-for-task.edn"]
+                                        "test/data/06-pause-days-for-task.edn"
+                                        "test/data/07-task-resources.edn"]
 
           expected-asciidoc-files-list ["test/data/results/01-fixed-dates-calendar.adoc"
                                         "test/data/results/02-durations-only.adoc"
                                         "test/data/results/03-reverse-order-planning.adoc"
                                         "test/data/results/04-header-title-footer.adoc"
                                         "test/data/results/05-colored-named-days.adoc"
-                                        "test/data/results/06-pause-days-for-task.adoc"]
+                                        "test/data/results/06-pause-days-for-task.adoc"
+                                        "test/data/results/07-task-resources.adoc"]
 
           expected-puml-files-list     ["test/data/results/01-fixed-dates-calendar.puml"
                                         "test/data/results/02-durations-only.puml"
                                         "test/data/results/03-reverse-order-planning.puml"
                                         "test/data/results/04-header-title-footer.puml"
                                         "test/data/results/05-colored-named-days.puml"
-                                        "test/data/results/06-pause-days-for-task.puml"]]
+                                        "test/data/results/06-pause-days-for-task.puml"
+                                        "test/data/results/07-task-resources.puml"]]
 
       (match (count edn-files-list) (count expected-asciidoc-files-list))
       (match (count edn-files-list) (count expected-puml-files-list))
