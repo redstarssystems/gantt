@@ -185,6 +185,7 @@
          [:alias task-alias]
          [:percent-complete task-percent-complete]
          [:color {:optional true} color]
+         [:pause-on-days {:optional true} [:vector {:gen/min 1, :gen/max 3} string-date]]
          [:starts-at {:optional true} task-starts-at]
          [:starts-before-end {:optional true} task-starts-before-end]
          [:starts-after-end {:optional true} task-starts-after-end]

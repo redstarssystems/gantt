@@ -1,0 +1,22 @@
+[plantuml, format=png]
+----
+@startgantt
+
+Project starts 2021-06-01
+
+projectscale daily
+
+
+[Task1] as [t1] lasts 6 days and starts 2021-06-01
+[t1] pauses on 2021-06-03
+[t1] pauses on 2021-06-04
+
+[Task2] as [t2] lasts 8 days and starts at [t1]'s end
+
+[t1] is 20% completed
+[t2] is 20% completed
+
+
+
+@endgantt
+----

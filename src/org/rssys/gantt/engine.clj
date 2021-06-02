@@ -125,9 +125,20 @@
       :else (throw (ex-info "Unknown task format" task)))))
 
 
+(defn task-pause
+  [task]
+  (when-let [pause-days-list (:pause-on-days task)]
+    (apply str
+      (for [day pause-days-list]
+        (format "[%s] pauses on %s\n" (name (:alias task)) day)))))
+
+
 (defmethod process-content :task
   [task]
-  (process-task task))
+  (when-let [task-string (process-task task)]
+    (if (seq (:pause-on-days task))
+      (str task-string \newline (task-pause task))
+      task-string)))
 
 
 (defmethod process-task [:days-lasts]
@@ -362,6 +373,10 @@
   (write-content->file (gantt-content->asciidoc-content content) "05-colored-named-days.adoc")
   (write-content->file (gantt-content->puml-content content) "05-colored-named-days.puml")
 
+  (def gantt-struc (read-gantt-struct "test/data/06-pause-days-for-task.edn"))
+  (def content (make-gantt-content gantt-struc))
+  (write-content->file (gantt-content->asciidoc-content content) "06-pause-days-for-task.adoc")
+  (write-content->file (gantt-content->puml-content content) "06-pause-days-for-task.puml")
 
 
   (generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :svg)
