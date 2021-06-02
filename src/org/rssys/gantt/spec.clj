@@ -179,12 +179,22 @@
    task-alias])
 
 
+(def task-resource
+  [:and {:description "Task resource"
+         :gen/gen     (gen/fmap (fn [v]
+                                  (if (odd? v)
+                                    (str "Man-" v)
+                                    (str "Man-" v ":50%"))) (gen/choose 1 100))}
+   ne-string])
+
+
 (def task
   [:and [:map
          [:task task-name]
          [:alias task-alias]
          [:percent-complete task-percent-complete]
          [:color {:optional true} color]
+         [:resources {:optional true} [:vector {:gen/min 1, :gen/max 3} task-resource]]
          [:pause-on-days {:optional true} [:vector {:gen/min 1, :gen/max 3} string-date]]
          [:starts-at {:optional true} task-starts-at]
          [:starts-before-end {:optional true} task-starts-before-end]
