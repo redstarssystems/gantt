@@ -9,6 +9,7 @@ scale 1200*900
 projectscale daily
 
 2021-06-04 to 2021-06-06 are colored in salmon
+2021-06-04 to 2021-06-06 are named [out of office]
 2021-06-02 is colored in GreenYellow/Green
 2021-06-08 is colored in GreenYellow/Green
 

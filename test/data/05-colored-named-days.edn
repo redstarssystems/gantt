@@ -6,8 +6,9 @@
  :project-starts  "2021-06-01"
  :project-scale   :daily
  :days-colors     [{:color      "salmon"
-                    :days-range {:from "2021-06-04"
-                                 :to   "2021-06-06"}}
+                    :days-range {:days-name "out of office" ;; optional field
+                                 :from      "2021-06-04"
+                                 :to        "2021-06-06"}}
 
                    {:color     "GreenYellow/Green"
                     :days-list ["2021-06-02" "2021-06-08"]}

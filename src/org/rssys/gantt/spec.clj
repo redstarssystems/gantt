@@ -89,6 +89,7 @@
      [:days-list {:optional true} [:vector {:description "List of days" :gen/min 1, :gen/max 3} string-date]]
      [:days-range {:optional true} [:map
                                     {:description "Range of days"}
+                                    [:days-name {:optional true} ne-string]
                                     [:from string-date]
                                     [:to string-date]]]]
     [:fn {:error/message ":days-list or :days-range must present, but only one of them."}

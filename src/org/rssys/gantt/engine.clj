@@ -74,7 +74,10 @@
   (when (:days-colors content)
     (for [day (:days-colors content)]
       (cond
-        (:days-range day) (format "\n%s to %s are colored in %s" (-> day :days-range :from) (-> day :days-range :to) (:color day))
+        (:days-range day) (if (-> day :days-range :days-name)
+                            (apply str [(format "\n%s to %s are colored in %s" (-> day :days-range :from) (-> day :days-range :to) (:color day))
+                                        (format "\n%s to %s are named [%s]" (-> day :days-range :from) (-> day :days-range :to) (-> day :days-range :days-name))])
+                            (format "\n%s to %s are colored in %s" (-> day :days-range :from) (-> day :days-range :to) (:color day)))
         (:days-list day) (apply str
                            (for [date (:days-list day)]
                              (format "\n%s is colored in %s" date (:color day))))))))
