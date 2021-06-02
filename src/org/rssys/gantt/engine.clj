@@ -68,12 +68,35 @@
       (format "\n%s is closed" day))))
 
 
-(defmulti process-task "process task"
-  (fn [{:keys [separator name alias days-lasts starts-at
-               starts-after ends-at starts-before-end starts-after-end
-               ends-at-start ends-at-end] :as t}]
+(defmulti process-content "process content"
+  (fn [{:keys [separator task milestone] :as item}]
     (cond
       separator :separator
+      task :task
+      milestone :milestone
+      :else (throw (ex-info "Unknown content element" item)))))
+
+
+(defmethod process-content :separator
+  [task]
+  (format "\n\n-- %s --\n" (:separator task)))
+
+(defn process-milestone
+  [milestone]
+  (if (:happens-at milestone)
+    [(format "\n[%s] happens %s" (:milestone milestone) (:happens-at milestone))]
+    (for [task-alias (:happens-after milestone)]
+      (format "\n[%s] happens after [%s]'s end" (:milestone milestone) (name task-alias)))))
+
+(defmethod process-content :milestone
+  [milestone]
+  (apply str (mapcat #(process-milestone %) [milestone])))
+
+
+(defmulti process-task "process task"
+  (fn [{:keys [days-lasts starts-at ends-at-start ends-at-end starts-after
+               starts-before-end starts-after-end ends-at] :as task}]
+    (cond
       (and days-lasts starts-at) [:days-lasts :starts-at]
       (and days-lasts ends-at-start) [:days-lasts :ends-at-start]
       (and days-lasts ends-at-end) [:days-lasts :ends-at-end]
@@ -82,18 +105,17 @@
       (and days-lasts starts-after-end) [:days-lasts :starts-after-end]
       (and starts-at ends-at) [:starts-at :ends-at]
       days-lasts [:days-lasts]
-      :else (throw (ex-info "Unknown task format" t)))))
+      :else (throw (ex-info "Unknown task format" task)))))
 
-
-(defmethod process-task :separator
+(defmethod process-content :task
   [task]
-  (format "\n\n-- %s --\n" (:separator task)))
+  (process-task task))
 
 
 (defmethod process-task [:days-lasts]
   [task]
   (format "\n[%s] as [%s] lasts %s days"
-    (:name task)
+    (:task task)
     (name (:alias task))
     (:days-lasts task)))
 
@@ -101,7 +123,7 @@
 (defmethod process-task [:days-lasts :starts-at]
   [task]
   (format "\n[%s] as [%s] lasts %s days and starts %s"
-    (:name task)
+    (:task task)
     (name (:alias task))
     (:days-lasts task)
     (:starts-at task)))
@@ -110,7 +132,7 @@
 (defmethod process-task [:days-lasts :ends-at-start]
   [task]
   (format "\n[%s] as [%s] lasts %s days and ends at [%s]'s start"
-    (:name task)
+    (:task task)
     (name (:alias task))
     (:days-lasts task)
     (name (:ends-at-start task))))
@@ -119,7 +141,7 @@
 (defmethod process-task [:days-lasts :ends-at-end]
   [task]
   (format "\n[%s] as [%s] lasts %s days and ends at [%s]'s end"
-    (:name task)
+    (:task task)
     (name (:alias task))
     (:days-lasts task)
     (name (:ends-at-end task))))
@@ -128,7 +150,7 @@
 (defmethod process-task [:days-lasts :starts-after]
   [task]
   (format "\n[%s] as [%s] lasts %s days and starts at [%s]'s end"
-    (:name task)
+    (:task task)
     (name (:alias task))
     (:days-lasts task)
     (name (:starts-after task))))
@@ -137,7 +159,7 @@
 (defmethod process-task [:days-lasts :starts-before-end]
   [task]
   (format "\n[%s] as [%s] lasts %s days and starts %s days before [%s]'s end"
-    (:name task)
+    (:task task)
     (name (:alias task))
     (:days-lasts task)
     (second (:starts-before-end task))
@@ -147,7 +169,7 @@
 (defmethod process-task [:days-lasts :starts-after-end]
   [task]
   (format "\n[%s] as [%s] lasts %s days and starts %s days after [%s]'s end"
-    (:name task)
+    (:task task)
     (name (:alias task))
     (:days-lasts task)
     (second (:starts-after-end task))
@@ -157,24 +179,24 @@
 (defmethod process-task [:starts-at :ends-at]
   [task]
   (format "\n[%s] as [%s] starts %s and ends %s "
-    (:name task)
+    (:task task)
     (name (:alias task))
     (:starts-at task)
     (:ends-at task)))
 
 
-(defn tasks
+(defn project-content
   [content]
-  (when (:tasks content)
-    (for [task (:tasks content)]
-      (process-task task))))
+  (when (:project-content content)
+    (for [item (:project-content content)]
+      (process-content item))))
 
 
 (defn task-complete
   [content]
-  (when (:tasks content)
-    (for [task (:tasks content)]
-      (when-not (:separator task)
+  (when (:project-content content)
+    (for [task (:project-content content)]
+      (when (:task task)
         (format "[%s] is %s%% completed\n"
           (name (:alias task))
           (:percent-complete task))))))
@@ -182,9 +204,9 @@
 
 (defn task-colored
   [content]
-  (when (:tasks content)
-    (for [task (:tasks content)]
-      (when-not (:separator task)
+  (when (:project-content content)
+    (for [task (:project-content content)]
+      (when (:task task)
         (when-let [percent (:percent-complete task)]
           (cond
             (:color task) (format "[%s] is colored in %s\n" (name (:alias task)) (:color task))
@@ -201,9 +223,9 @@
   (when (:milestones content)
     (mapcat (fn [milestone]
               (if (:happens-at milestone)
-                [(format "\n[%s] happens %s" (:name milestone) (:happens-at milestone))]
+                [(format "\n[%s] happens %s" (:milestone milestone) (:happens-at milestone))]
                 (for [task-alias (:happens-after milestone)]
-                  (format "\n[%s] happens after [%s]'s end" (:name milestone) (name task-alias)))))
+                  (format "\n[%s] happens after [%s]'s end" (:milestone milestone) (name task-alias)))))
       (:milestones content))))
 
 
@@ -222,7 +244,7 @@
     (into (for [weekend (weekend-days gantt-struc)] weekend))
     (into (for [holiday (holidays gantt-struc)] holiday))
     (conj \newline)
-    (into (for [task (tasks gantt-struc)] task))
+    (into (for [item (project-content gantt-struc)] item))
     (conj "\n\n")
     (into (remove nil? (for [task (task-complete gantt-struc)] task)))
     (conj \newline)
@@ -296,22 +318,27 @@
 
 
 (comment
-  (def gantt-struc (read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn"))
+  (def gantt-struc (read-gantt-struct "test/data/01-fixed-dates-calendar.edn"))
   (def content (make-gantt-content gantt-struc))
-  (write-content->file (gantt-content->asciidoc-content content) "ex01.adoc")
+  (write-content->file (gantt-content->asciidoc-content content) "01-fixed-dates-calendar.adoc")
+  (write-content->file (gantt-content->puml-content content) "01-fixed-dates-calendar.puml")
 
-  (def gantt-struc (read-gantt-struct "test/data/ex02-durations-only.edn"))
+  (def gantt-struc (read-gantt-struct "test/data/02-durations-only.edn"))
   (def content (make-gantt-content gantt-struc))
-  (write-content->file (gantt-content->asciidoc-content content) "ex02.adoc")
+  (write-content->file (gantt-content->asciidoc-content content) "02-durations-only.adoc")
+  (write-content->file (gantt-content->puml-content content) "02-durations-only.puml")
 
-  (def gantt-struc (read-gantt-struct "test/data/ex03-reverse-order-planning.edn"))
+  (def gantt-struc (read-gantt-struct "test/data/03-reverse-order-planning.edn"))
   (def content (make-gantt-content gantt-struc))
-  (write-content->file (gantt-content->asciidoc-content content) "ex03.adoc")
+  (write-content->file (gantt-content->asciidoc-content content) "03-reverse-order-planning.adoc")
+  (write-content->file (gantt-content->puml-content content) "03-reverse-order-planning.puml")
 
-  (def gantt-struc (read-gantt-struct "test/data/ex04-header-title-footer.edn"))
+  (def gantt-struc (read-gantt-struct "test/data/04-header-title-footer.edn"))
   (def content (make-gantt-content gantt-struc))
-  (write-content->file (gantt-content->asciidoc-content content) "ex04.adoc")
-  (write-content->file (gantt-content->puml-content content) "ex04-header-title-footer.puml")
+  (write-content->file (gantt-content->asciidoc-content content) "04-header-title-footer.adoc")
+  (write-content->file (gantt-content->puml-content content) "04-header-title-footer.puml")
+
+
 
   (generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :svg)
   (generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :png :output-folder "./test")

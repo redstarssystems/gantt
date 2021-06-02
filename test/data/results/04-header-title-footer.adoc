@@ -1,3 +1,5 @@
+[plantuml, format=png]
+----
 @startgantt
 
 scale 1200*900
@@ -13,10 +15,11 @@ Hide footbox
 projectscale daily
 
 
-[Task1] as [t5] lasts 10 days
+[Task1] as [t1] lasts 10 days
 
-[t5] is 20% completed
+[t1] is 20% completed
 
 
 
 @endgantt
+----

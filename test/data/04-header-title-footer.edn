@@ -1,0 +1,17 @@
+{
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; example scale, title, header, footer, footbox
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ :scale           "1200*900"
+ :project-scale   :daily
+ :project-title   "Title1"
+ :project-header  "Header1"
+ :project-footer  "Footer1"
+ :hide-footbox?   true
+
+ :project-content [{:task             "Task1"
+                    :alias            :t1
+                    :days-lasts       10
+                    :percent-complete 20}]
+
+ }

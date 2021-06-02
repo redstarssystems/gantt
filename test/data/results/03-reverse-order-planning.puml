@@ -6,8 +6,10 @@ projectscale daily
 [whole project] as [t5] lasts 30 days
 [task4] as [t4] lasts 4 days and ends at [t5]'s end
 [task3] as [t3] lasts 4 days and ends at [t4]'s start
+[m2] happens after [t3]'s end
 [task2] as [t2] lasts 12 days and ends at [t3]'s start
 [task1] as [t1] lasts 10 days and ends at [t2]'s start
+[m1] happens after [t1]'s end
 
 [t5] is 0% completed
 [t4] is 0% completed
@@ -17,7 +19,5 @@ projectscale daily
 
 [t5] is colored in Gray
 
-[m1] happens after [t1]'s end
-[m2] happens after [t3]'s end
 
 @endgantt

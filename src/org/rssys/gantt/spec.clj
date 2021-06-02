@@ -159,7 +159,7 @@
 
 (def task
   [:and [:map
-         [:name task-name]
+         [:task task-name]
          [:alias task-alias]
          [:percent-complete task-percent-complete]
          [:color {:optional true} color]
@@ -224,9 +224,6 @@
     ne-string]])
 
 
-(def task-list [:vector {:gen/min 1, :gen/max 5} [:or task separator]])
-
-
 ;;
 ;; Milestone types
 ;;
@@ -250,7 +247,7 @@
 
 (def milestone
   [:and [:map
-         [:name milestone-name]
+         [:milestone milestone-name]
          [:happens-after {:optional true} milestone-happens-after]
          [:happens-at {:optional true} milestone-happens-at]]
    [:fn {:error/message ":days-lasts or :ends-at must present, but only one of them "}
@@ -265,6 +262,9 @@
 ;; PlantUML Gantt structure
 ;;
 
+(def project-content [:vector {:gen/min 1, :gen/max 5} [:or task separator milestone]])
+
+
 (def gantt-structure
   [:and
    [:map
@@ -278,13 +278,14 @@
     [:task-colors {:optional true} task-colors]
     [:closed-days {:optional true} closed-days]
     [:holidays {:optional true} holidays]
-    [:tasks task-list]
+    [:project-content project-content]
     [:milestones {:optional true} [:vector {:gen/min 1, :gen/max 3} milestone]]]])
 
 
 (comment
-  (mg/generate gantt-structure)
-  (mg/generate task-list)
+  (require '[malli.generator :as mg])
+  (mg/generate "gantt-structure")
+  (mg/generate project-content)
   (me/humanize (m/explain task {:name "task3" :alias :t3 :ends-at "2021-05-18" :percent-complete 0 :starts-after :t1}))
   (def gantt-struc {:project-starts "2004-12-15",
                     :project-scale  :yearly,

@@ -1,4 +1,4 @@
-[plantuml, format=svg]
+[plantuml, format=png]
 ----
 @startgantt
 

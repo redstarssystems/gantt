@@ -1,0 +1,45 @@
+{
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; example for reverse order planning
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ :project-scale   :daily
+
+ :project-content [{:task             "whole project"
+                    :alias            :t5
+                    :days-lasts       30
+                    :percent-complete 0
+                    :color            "Gray"}
+
+                   {:task             "task4"
+                    :alias            :t4
+                    :days-lasts       4
+                    :percent-complete 0
+                    :ends-at-end      :t5}
+
+                   {:task             "task3"
+                    :alias            :t3
+                    :days-lasts       4
+                    :percent-complete 0
+                    :ends-at-start    :t4}
+
+                   {:milestone     "m2"
+                    :happens-after [:t3]}
+
+                   {:task             "task2"
+                    :alias            :t2
+                    :days-lasts       12
+                    :percent-complete 0
+                    :ends-at-start    :t3}
+
+                   {:task             "task1"
+                    :alias            :t1
+                    :days-lasts       10
+                    :percent-complete 0
+                    :ends-at-start    :t2}
+
+                   {:milestone     "m1"
+                    :happens-after [:t1]}
+
+                   ]
+
+ }

@@ -14,66 +14,66 @@
 (deftest ^:unit read-gantt-struct-test
 
   (testing "read correct EDN-data completes successfully"
-    (let [correct-edn1 (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
-          correct-edn2 (sut/read-gantt-struct "test/data/ex02-durations-only.edn")
-          correct-edn3 (sut/read-gantt-struct "test/data/ex03-reverse-order-planning.edn")]
+    (let [correct-edn1 (sut/read-gantt-struct "test/data/01-fixed-dates-calendar.edn")
+          correct-edn2 (sut/read-gantt-struct "test/data/02-durations-only.edn")
+          correct-edn3 (sut/read-gantt-struct "test/data/03-reverse-order-planning.edn")]
       (match correct-edn1 {:project-starts "2021-05-01"
                            :project-scale  :daily
                            :task-colors    {:color/in-progress "GreenYellow/Red"
                                             :color/completed   "GreenYellow/Green"}
                            :closed-days    #{:saturday :sunday}
                            :holidays       ["2021-05-03" "2021-05-10"]})
-      (match (-> correct-edn2 :tasks first) {:name             "task1"
-                                             :alias            :t1
-                                             :days-lasts       10
-                                             :percent-complete 100})
-      (match (-> correct-edn3 :tasks first) {:name             "whole project"
-                                             :alias            :t5
-                                             :days-lasts       30
-                                             :percent-complete 0
-                                             :color            "Gray"})))
+      (match (-> correct-edn2 :project-content first) {:task             "task1"
+                                                       :alias            :t1
+                                                       :days-lasts       10
+                                                       :percent-complete 100})
+      (match (-> correct-edn3 :project-content first) {:task             "whole project"
+                                                       :alias            :t5
+                                                       :days-lasts       30
+                                                       :percent-complete 0
+                                                       :color            "Gray"})))
 
   (testing "read bad EDN-data throws Exception"
     (let []
       (is (thrown-with-msg?
             ExceptionInfo
             #"has invalid structure"
-            (sut/read-gantt-struct "test/data/bad-data/ex01-bad-data.edn"))))))
+            (sut/read-gantt-struct "test/data/bad-data/01-bad-data.edn"))))))
 
 
 (deftest ^:unit write-content->file-test
 
   (testing "Asciidoc content generates successfully"
-    (let [gantt-struc1          (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
-          gantt-struc2          (sut/read-gantt-struct "test/data/ex02-durations-only.edn")
-          gantt-struc3          (sut/read-gantt-struct "test/data/ex03-reverse-order-planning.edn")
-          gantt-struc4          (sut/read-gantt-struct "test/data/ex04-header-title-footer.edn")
+    (let [gantt-struc1          (sut/read-gantt-struct "test/data/01-fixed-dates-calendar.edn")
+          gantt-struc2          (sut/read-gantt-struct "test/data/02-durations-only.edn")
+          gantt-struc3          (sut/read-gantt-struct "test/data/03-reverse-order-planning.edn")
+          gantt-struc4          (sut/read-gantt-struct "test/data/04-header-title-footer.edn")
 
-          ex-01-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex01-" ".adoc")))
-          ex-02-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex02-" ".adoc")))
-          ex-03-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex03-" ".adoc")))
-          ex-04-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex04-" ".adoc")))
+          ex-01-temp-file       (str (fs/delete-on-exit (File/createTempFile "01-" ".adoc")))
+          ex-02-temp-file       (str (fs/delete-on-exit (File/createTempFile "02-" ".adoc")))
+          ex-03-temp-file       (str (fs/delete-on-exit (File/createTempFile "03-" ".adoc")))
+          ex-04-temp-file       (str (fs/delete-on-exit (File/createTempFile "04-" ".adoc")))
 
           gantt-content1        (sut/make-gantt-content gantt-struc1)
           gantt-content2        (sut/make-gantt-content gantt-struc2)
           gantt-content3        (sut/make-gantt-content gantt-struc3)
           gantt-content4        (sut/make-gantt-content gantt-struc4)
 
-          ex01-expected-content (slurp "test/data/results/ex01-fixed-dates-calendar.adoc")
-          ex02-expected-content (slurp "test/data/results/ex02-durations-only.adoc")
-          ex03-expected-content (slurp "test/data/results/ex03-reverse-order-planning.adoc")
-          ex04-expected-content (slurp "test/data/results/ex04-header-title-footer.adoc")]
+          ex01-expected-content (slurp "test/data/results/01-fixed-dates-calendar.adoc")
+          ex02-expected-content (slurp "test/data/results/02-durations-only.adoc")
+          ex03-expected-content (slurp "test/data/results/03-reverse-order-planning.adoc")
+          ex04-expected-content (slurp "test/data/results/04-header-title-footer.adoc")]
 
       (sut/write-content->file
-        (sut/gantt-content->asciidoc-content gantt-content1 :img-format :svg)
+        (sut/gantt-content->asciidoc-content gantt-content1 :img-format :png)
         ex-01-temp-file)
 
       (sut/write-content->file
-        (sut/gantt-content->asciidoc-content gantt-content2 :img-format :svg)
+        (sut/gantt-content->asciidoc-content gantt-content2 :img-format :png)
         ex-02-temp-file)
 
       (sut/write-content->file
-        (sut/gantt-content->asciidoc-content gantt-content3 :img-format :svg)
+        (sut/gantt-content->asciidoc-content gantt-content3 :img-format :png)
         ex-03-temp-file)
 
       (sut/write-content->file
@@ -91,25 +91,25 @@
       (fs/delete-if-exists ex-04-temp-file)))
 
   (testing "PUML content generates successfully"
-    (let [gantt-struc1          (sut/read-gantt-struct "test/data/ex01-fixed-dates-calendar.edn")
-          gantt-struc2          (sut/read-gantt-struct "test/data/ex02-durations-only.edn")
-          gantt-struc3          (sut/read-gantt-struct "test/data/ex03-reverse-order-planning.edn")
-          gantt-struc4          (sut/read-gantt-struct "test/data/ex04-header-title-footer.edn")
+    (let [gantt-struc1          (sut/read-gantt-struct "test/data/01-fixed-dates-calendar.edn")
+          gantt-struc2          (sut/read-gantt-struct "test/data/02-durations-only.edn")
+          gantt-struc3          (sut/read-gantt-struct "test/data/03-reverse-order-planning.edn")
+          gantt-struc4          (sut/read-gantt-struct "test/data/04-header-title-footer.edn")
 
-          ex-01-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex01-" ".puml")))
-          ex-02-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex02-" ".puml")))
-          ex-03-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex03-" ".puml")))
-          ex-04-temp-file       (str (fs/delete-on-exit (File/createTempFile "ex04-" ".puml")))
+          ex-01-temp-file       (str (fs/delete-on-exit (File/createTempFile "01-" ".puml")))
+          ex-02-temp-file       (str (fs/delete-on-exit (File/createTempFile "02-" ".puml")))
+          ex-03-temp-file       (str (fs/delete-on-exit (File/createTempFile "03-" ".puml")))
+          ex-04-temp-file       (str (fs/delete-on-exit (File/createTempFile "04-" ".puml")))
 
           gantt-content1        (sut/make-gantt-content gantt-struc1)
           gantt-content2        (sut/make-gantt-content gantt-struc2)
           gantt-content3        (sut/make-gantt-content gantt-struc3)
           gantt-content4        (sut/make-gantt-content gantt-struc4)
 
-          ex01-expected-content (slurp "test/data/results/ex01-fixed-dates-calendar.puml")
-          ex02-expected-content (slurp "test/data/results/ex02-durations-only.puml")
-          ex03-expected-content (slurp "test/data/results/ex03-reverse-order-planning.puml")
-          ex04-expected-content (slurp "test/data/results/ex04-header-title-footer.puml")]
+          ex01-expected-content (slurp "test/data/results/01-fixed-dates-calendar.puml")
+          ex02-expected-content (slurp "test/data/results/02-durations-only.puml")
+          ex03-expected-content (slurp "test/data/results/03-reverse-order-planning.puml")
+          ex04-expected-content (slurp "test/data/results/04-header-title-footer.puml")]
 
       (sut/write-content->file
         (sut/gantt-content->puml-content gantt-content1)
@@ -143,7 +143,7 @@
   (testing "PNG generated from PUML file successfully"
     (let [temp-dir (fs/create-temp-dir {:prefix "puml-"})]
       (try
-        (let [result (sut/generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :png :output-folder (str temp-dir))]
+        (let [result (sut/generate-gantt-picture "test/data/results/04-header-title-footer.puml" :img-format :png :output-folder (str temp-dir))]
           (match (fs/extension (:output-filename result)) "png")
           (match (fs/size (:output-filename result)) pos-int?))
         (finally
@@ -152,7 +152,7 @@
   (testing "SVG generated from PUML file successfully"
     (let [temp-dir (fs/create-temp-dir {:prefix "puml-"})]
       (try
-        (let [result (sut/generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :svg :output-folder (str temp-dir))]
+        (let [result (sut/generate-gantt-picture "test/data/results/04-header-title-footer.puml" :img-format :svg :output-folder (str temp-dir))]
           (match (fs/extension (:output-filename result)) "svg")
           (match (fs/size (:output-filename result)) pos-int?))
         (finally
