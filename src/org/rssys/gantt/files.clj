@@ -1,13 +1,13 @@
 (ns org.rssys.gantt.files
   (:require
     [babashka.fs :as fs]
-    [org.rssys.gantt.engine :as engine]
-    [hawk.core :as hawk])
+    [hawk.core :as hawk]
+    [org.rssys.gantt.engine :as engine])
   (:import
-    (java.io
-      File)
-    (java.time  ZonedDateTime)
-    (java.time.format DateTimeFormatter)))
+    (java.time
+      ZonedDateTime)
+    (java.time.format
+      DateTimeFormatter)))
 
 
 (defn- generate-gantt-from-edn

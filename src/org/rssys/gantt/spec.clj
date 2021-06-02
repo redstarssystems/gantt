@@ -27,11 +27,13 @@
     (fn [^String s]
       (instance? LocalDate (LocalDate/parse s)))]])
 
+
 (def scale
   [:and
    {:description "SVG/PNG image size."
     :gen/gen     (gen/return "1200*900")}
    ne-string])
+
 
 (def title
   [:and
@@ -70,11 +72,30 @@
    ne-string])
 
 
-(def task-colors
+(def tasks-colors
   [:map
-   {:description "Task colors"}
+   {:description "Tasks colors"}
    [:color/in-progress {:optional true} color]
    [:color/completed {:optional true} color]])
+
+
+(def days-colors
+  [:vector
+   {:description "List of colored days" :gen/min 1, :gen/max 5}
+   [:and
+    [:map
+     {:description "Day colors"}
+     [:color color]
+     [:days-list {:optional true} [:vector {:description "List of days" :gen/min 1, :gen/max 3} string-date]]
+     [:days-range {:optional true} [:map
+                                    {:description "Range of days"}
+                                    [:from string-date]
+                                    [:to string-date]]]]
+    [:fn {:error/message ":days-list or :days-range must present, but only one of them."}
+     (fn [{:keys [days-list days-range]}]
+       (or
+         (and days-list (nil? days-range))
+         (and days-range (nil? days-list))))]]])
 
 
 (def week-days
@@ -275,7 +296,8 @@
     [:project-footer {:optional true} footer]
     [:project-scale {:optional true} project-scale]
     [:hide-footbox? {:optional true} hide-footbox]
-    [:task-colors {:optional true} task-colors]
+    [:tasks-colors {:optional true} tasks-colors]
+    [:days-colors {:optional true} days-colors]
     [:closed-days {:optional true} closed-days]
     [:holidays {:optional true} holidays]
     [:project-content project-content]
@@ -284,7 +306,7 @@
 
 (comment
   (require '[malli.generator :as mg])
-  (mg/generate "gantt-structure")
+  (mg/generate gantt-structure)
   (mg/generate project-content)
   (me/humanize (m/explain task {:name "task3" :alias :t3 :ends-at "2021-05-18" :percent-complete 0 :starts-after :t1}))
   (def gantt-struc {:project-starts "2004-12-15",

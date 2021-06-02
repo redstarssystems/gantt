@@ -6,7 +6,7 @@
 
  :project-scale   :daily
 
- :task-colors     {:color/in-progress "GreenYellow/Red"
+ :tasks-colors    {:color/in-progress "GreenYellow/Red"
                    :color/completed   "GreenYellow/Green"}
 
  :closed-days     #{:saturday :sunday}

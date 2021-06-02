@@ -19,7 +19,7 @@
           correct-edn3 (sut/read-gantt-struct "test/data/03-reverse-order-planning.edn")]
       (match correct-edn1 {:project-starts "2021-05-01"
                            :project-scale  :daily
-                           :task-colors    {:color/in-progress "GreenYellow/Red"
+                           :tasks-colors   {:color/in-progress "GreenYellow/Red"
                                             :color/completed   "GreenYellow/Green"}
                            :closed-days    #{:saturday :sunday}
                            :holidays       ["2021-05-03" "2021-05-10"]})
@@ -34,108 +34,52 @@
                                                        :color            "Gray"})))
 
   (testing "read bad EDN-data throws Exception"
-    (let []
-      (is (thrown-with-msg?
-            ExceptionInfo
-            #"has invalid structure"
-            (sut/read-gantt-struct "test/data/bad-data/01-bad-data.edn"))))))
+    (is (thrown-with-msg?
+          ExceptionInfo
+          #"has invalid structure"
+          (sut/read-gantt-struct "test/data/bad-data/01-bad-data.edn")))))
 
 
 (deftest ^:unit write-content->file-test
 
-  (testing "Asciidoc content generates successfully"
-    (let [gantt-struc1          (sut/read-gantt-struct "test/data/01-fixed-dates-calendar.edn")
-          gantt-struc2          (sut/read-gantt-struct "test/data/02-durations-only.edn")
-          gantt-struc3          (sut/read-gantt-struct "test/data/03-reverse-order-planning.edn")
-          gantt-struc4          (sut/read-gantt-struct "test/data/04-header-title-footer.edn")
+  (testing "Asciidoc && PUML content generates successfully"
+    (let [edn-files-list               ["test/data/01-fixed-dates-calendar.edn"
+                                        "test/data/02-durations-only.edn"
+                                        "test/data/03-reverse-order-planning.edn"
+                                        "test/data/04-header-title-footer.edn"
+                                        "test/data/05-colored-named-days.edn"]
 
-          ex-01-temp-file       (str (fs/delete-on-exit (File/createTempFile "01-" ".adoc")))
-          ex-02-temp-file       (str (fs/delete-on-exit (File/createTempFile "02-" ".adoc")))
-          ex-03-temp-file       (str (fs/delete-on-exit (File/createTempFile "03-" ".adoc")))
-          ex-04-temp-file       (str (fs/delete-on-exit (File/createTempFile "04-" ".adoc")))
+          expected-asciidoc-files-list ["test/data/results/01-fixed-dates-calendar.adoc"
+                                        "test/data/results/02-durations-only.adoc"
+                                        "test/data/results/03-reverse-order-planning.adoc"
+                                        "test/data/results/04-header-title-footer.adoc"
+                                        "test/data/results/05-colored-named-days.adoc"]
 
-          gantt-content1        (sut/make-gantt-content gantt-struc1)
-          gantt-content2        (sut/make-gantt-content gantt-struc2)
-          gantt-content3        (sut/make-gantt-content gantt-struc3)
-          gantt-content4        (sut/make-gantt-content gantt-struc4)
+          expected-puml-files-list     ["test/data/results/01-fixed-dates-calendar.puml"
+                                        "test/data/results/02-durations-only.puml"
+                                        "test/data/results/03-reverse-order-planning.puml"
+                                        "test/data/results/04-header-title-footer.puml"
+                                        "test/data/results/05-colored-named-days.puml"]]
 
-          ex01-expected-content (slurp "test/data/results/01-fixed-dates-calendar.adoc")
-          ex02-expected-content (slurp "test/data/results/02-durations-only.adoc")
-          ex03-expected-content (slurp "test/data/results/03-reverse-order-planning.adoc")
-          ex04-expected-content (slurp "test/data/results/04-header-title-footer.adoc")]
+      (match (count edn-files-list) (count expected-asciidoc-files-list))
+      (match (count edn-files-list) (count expected-puml-files-list))
 
-      (sut/write-content->file
-        (sut/gantt-content->asciidoc-content gantt-content1 :img-format :png)
-        ex-01-temp-file)
+      (dotimes [i (count expected-asciidoc-files-list)]
+        (let [gantt-struct     (sut/read-gantt-struct (nth edn-files-list i))
+              adoc-temp-file        (str (fs/delete-on-exit (File/createTempFile "gantt-" ".adoc")))
+              puml-temp-file        (str (fs/delete-on-exit (File/createTempFile "gantt-" ".puml")))
+              gantt-content    (sut/make-gantt-content gantt-struct)
+              expected-adoc-content (slurp (nth expected-asciidoc-files-list i))
+              expected-puml-content (slurp (nth expected-puml-files-list i))]
 
-      (sut/write-content->file
-        (sut/gantt-content->asciidoc-content gantt-content2 :img-format :png)
-        ex-02-temp-file)
+          (sut/write-content->file (sut/gantt-content->asciidoc-content gantt-content :img-format :png) adoc-temp-file)
+          (sut/write-content->file (sut/gantt-content->puml-content gantt-content) puml-temp-file)
 
-      (sut/write-content->file
-        (sut/gantt-content->asciidoc-content gantt-content3 :img-format :png)
-        ex-03-temp-file)
+          (match (slurp adoc-temp-file) expected-adoc-content)
+          (match (slurp puml-temp-file) expected-puml-content)
 
-      (sut/write-content->file
-        (sut/gantt-content->asciidoc-content gantt-content4 :img-format :png)
-        ex-04-temp-file)
-
-      (match (slurp ex-01-temp-file) ex01-expected-content)
-      (match (slurp ex-02-temp-file) ex02-expected-content)
-      (match (slurp ex-03-temp-file) ex03-expected-content)
-      (match (slurp ex-04-temp-file) ex04-expected-content)
-
-      (fs/delete-if-exists ex-01-temp-file)
-      (fs/delete-if-exists ex-02-temp-file)
-      (fs/delete-if-exists ex-03-temp-file)
-      (fs/delete-if-exists ex-04-temp-file)))
-
-  (testing "PUML content generates successfully"
-    (let [gantt-struc1          (sut/read-gantt-struct "test/data/01-fixed-dates-calendar.edn")
-          gantt-struc2          (sut/read-gantt-struct "test/data/02-durations-only.edn")
-          gantt-struc3          (sut/read-gantt-struct "test/data/03-reverse-order-planning.edn")
-          gantt-struc4          (sut/read-gantt-struct "test/data/04-header-title-footer.edn")
-
-          ex-01-temp-file       (str (fs/delete-on-exit (File/createTempFile "01-" ".puml")))
-          ex-02-temp-file       (str (fs/delete-on-exit (File/createTempFile "02-" ".puml")))
-          ex-03-temp-file       (str (fs/delete-on-exit (File/createTempFile "03-" ".puml")))
-          ex-04-temp-file       (str (fs/delete-on-exit (File/createTempFile "04-" ".puml")))
-
-          gantt-content1        (sut/make-gantt-content gantt-struc1)
-          gantt-content2        (sut/make-gantt-content gantt-struc2)
-          gantt-content3        (sut/make-gantt-content gantt-struc3)
-          gantt-content4        (sut/make-gantt-content gantt-struc4)
-
-          ex01-expected-content (slurp "test/data/results/01-fixed-dates-calendar.puml")
-          ex02-expected-content (slurp "test/data/results/02-durations-only.puml")
-          ex03-expected-content (slurp "test/data/results/03-reverse-order-planning.puml")
-          ex04-expected-content (slurp "test/data/results/04-header-title-footer.puml")]
-
-      (sut/write-content->file
-        (sut/gantt-content->puml-content gantt-content1)
-        ex-01-temp-file)
-
-      (sut/write-content->file
-        (sut/gantt-content->puml-content gantt-content2)
-        ex-02-temp-file)
-
-      (sut/write-content->file
-        (sut/gantt-content->puml-content gantt-content3)
-        ex-03-temp-file)
-
-      (sut/write-content->file
-        (sut/gantt-content->puml-content gantt-content4)
-        ex-04-temp-file)
-
-      (match (slurp ex-01-temp-file) ex01-expected-content)
-      (match (slurp ex-02-temp-file) ex02-expected-content)
-      (match (slurp ex-03-temp-file) ex03-expected-content)
-      (match (slurp ex-04-temp-file) ex04-expected-content)
-
-      (fs/delete-if-exists ex-01-temp-file)
-      (fs/delete-if-exists ex-02-temp-file)
-      (fs/delete-if-exists ex-03-temp-file)
-      (fs/delete-if-exists ex-04-temp-file))))
+          (fs/delete-if-exists adoc-temp-file)
+          (fs/delete-if-exists puml-temp-file))))))
 
 
 (deftest ^:unit generate-gantt-picture-test

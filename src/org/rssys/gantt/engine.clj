@@ -24,6 +24,7 @@
   (when (:scale content)
     (format "\nscale %s\n" (:scale content))))
 
+
 (defn project-title
   [content]
   (when (:project-title content)
@@ -68,6 +69,17 @@
       (format "\n%s is closed" day))))
 
 
+(defn days-colors
+  [content]
+  (when (:days-colors content)
+    (for [day (:days-colors content)]
+      (cond
+        (:days-range day) (format "\n%s to %s are colored in %s" (-> day :days-range :from) (-> day :days-range :to) (:color day))
+        (:days-list day) (apply str
+                           (for [date (:days-list day)]
+                             (format "\n%s is colored in %s" date (:color day))))))))
+
+
 (defmulti process-content "process content"
   (fn [{:keys [separator task milestone] :as item}]
     (cond
@@ -81,12 +93,14 @@
   [task]
   (format "\n\n-- %s --\n" (:separator task)))
 
+
 (defn process-milestone
   [milestone]
   (if (:happens-at milestone)
     [(format "\n[%s] happens %s" (:milestone milestone) (:happens-at milestone))]
     (for [task-alias (:happens-after milestone)]
       (format "\n[%s] happens after [%s]'s end" (:milestone milestone) (name task-alias)))))
+
 
 (defmethod process-content :milestone
   [milestone]
@@ -106,6 +120,7 @@
       (and starts-at ends-at) [:starts-at :ends-at]
       days-lasts [:days-lasts]
       :else (throw (ex-info "Unknown task format" task)))))
+
 
 (defmethod process-content :task
   [task]
@@ -211,11 +226,11 @@
           (cond
             (:color task) (format "[%s] is colored in %s\n" (name (:alias task)) (:color task))
 
-            (and (= percent 100) (-> content :task-colors :color/completed))
-            (format "[%s] is colored in %s\n" (name (:alias task)) (-> content :task-colors :color/completed))
+            (and (= percent 100) (-> content :tasks-colors :color/completed))
+            (format "[%s] is colored in %s\n" (name (:alias task)) (-> content :tasks-colors :color/completed))
 
-            (and (> percent 0) (-> content :task-colors :color/in-progress))
-            (format "[%s] is colored in %s\n" (name (:alias task)) (-> content :task-colors :color/in-progress))))))))
+            (and (> percent 0) (-> content :tasks-colors :color/in-progress))
+            (format "[%s] is colored in %s\n" (name (:alias task)) (-> content :tasks-colors :color/in-progress))))))))
 
 
 (defn milestones
@@ -243,6 +258,7 @@
     (conj (project-scale gantt-struc))
     (into (for [weekend (weekend-days gantt-struc)] weekend))
     (into (for [holiday (holidays gantt-struc)] holiday))
+    (into (for [colored-day (days-colors gantt-struc)] colored-day))
     (conj \newline)
     (into (for [item (project-content gantt-struc)] item))
     (conj "\n\n")
@@ -337,6 +353,11 @@
   (def content (make-gantt-content gantt-struc))
   (write-content->file (gantt-content->asciidoc-content content) "04-header-title-footer.adoc")
   (write-content->file (gantt-content->puml-content content) "04-header-title-footer.puml")
+
+  (def gantt-struc (read-gantt-struct "test/data/05-colored-named-days.edn"))
+  (def content (make-gantt-content gantt-struc))
+  (write-content->file (gantt-content->asciidoc-content content) "05-colored-named-days.adoc")
+  (write-content->file (gantt-content->puml-content content) "05-colored-named-days.puml")
 
 
 

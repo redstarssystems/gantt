@@ -1,0 +1,24 @@
+[plantuml, format=png]
+----
+@startgantt
+
+Project starts 2021-06-01
+
+scale 1200*900
+
+projectscale daily
+
+2021-06-04 to 2021-06-06 are colored in salmon
+2021-06-02 is colored in GreenYellow/Green
+2021-06-08 is colored in GreenYellow/Green
+
+[Task1] as [t1] lasts 4 days and starts 2021-06-01
+[Task2] as [t2] lasts 8 days and starts at [t1]'s end
+
+[t1] is 20% completed
+[t2] is 20% completed
+
+
+
+@endgantt
+----
