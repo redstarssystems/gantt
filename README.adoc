@@ -102,8 +102,13 @@ requirements Install project requirements
 
 === License
 
-Copyright © 2021 Mikhail Ananev +
-Distributed under the Eclipse Public License 2.0 or (at your option) any later version.
-Part of this code distributed under GNU General Public License v3
+
+This work is dual-licensed under Eclipse Public License 2.0  and GPL 3.0. +
+Only java source code `java/src` is under GPL 3.0. (C) Copyright 2009-2020, Arnaud Roques + 
+
+Rest of the program is under EPL 2.0. Copyright © 2021 Mikhail Ananev +
+You can choose between one of them if you use this work. +
+
+`SPDX-License-Identifier: EPL-2.0 OR GPL-3.0-or-later`
 
 
