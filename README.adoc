@@ -104,5 +104,6 @@ requirements Install project requirements
 
 Copyright © 2021 Mikhail Ananev +
 Distributed under the Eclipse Public License 2.0 or (at your option) any later version.
+Part of this code distributed under GNU General Public License v3
 
 

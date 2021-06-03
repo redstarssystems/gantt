@@ -2,7 +2,7 @@
  :mvn/repos {"clojars" {:url "https://repo.clojars.org/"}
              "central" {:url "https://repo1.maven.org/maven2/"}}
 
- :paths     ["src" "resources" "target/classes" #_"java/src"]
+ :paths     ["src" "resources" "target/classes" "java/src"]
 
  :deps      {org.clojure/clojure                       {:mvn/version "1.10.3"}
              org.clojure/test.check                    {:mvn/version "1.1.0"}

@@ -37,7 +37,7 @@
                                             group-id
                                             artifact-id
                                             version-id)]
-                               ;;(run 'javac) ;;uncomment this if you have java sources
+                               (run 'javac) ;;uncomment this if you have java sources
                                (fs/create-dirs target-folder)
                                (clojure params))}
 
