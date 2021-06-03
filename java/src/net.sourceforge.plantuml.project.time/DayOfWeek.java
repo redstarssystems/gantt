@@ -5,12 +5,12 @@
  * (C) Copyright 2009-2020, Arnaud Roques
  *
  * Project Info:  http://plantuml.com
- * 
+ *
  * If you like this project or if you find it useful, you can support us at:
- * 
+ *
  * http://plantuml.com/patreon (only 1$ per month!)
  * http://plantuml.com/paypal
- * 
+ *
  * This file is part of PlantUML.
  *
  * PlantUML is free software; you can redistribute it and/or modify it
@@ -30,7 +30,7 @@
  *
  *
  * Original Author:  Arnaud Roques
- * 
+ *
  *
  */
 package net.sourceforge.plantuml.project.time;
@@ -45,69 +45,70 @@ import net.sourceforge.plantuml.StringUtils;
 
 public enum DayOfWeek {
 
-	MONDAY(Calendar.MONDAY), TUESDAY(Calendar.TUESDAY), WEDNESDAY(Calendar.WEDNESDAY), THURSDAY(Calendar.THURSDAY),
-	FRIDAY(Calendar.FRIDAY), SATURDAY(Calendar.SATURDAY), SUNDAY(Calendar.SUNDAY);
+  MONDAY(Calendar.MONDAY), TUESDAY(Calendar.TUESDAY), WEDNESDAY(Calendar.WEDNESDAY), THURSDAY(Calendar.THURSDAY),
+  FRIDAY(Calendar.FRIDAY), SATURDAY(Calendar.SATURDAY), SUNDAY(Calendar.SUNDAY);
 
-	static final private Calendar gmt = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-	static final private SimpleDateFormat dateFormatGmt = new SimpleDateFormat("dd MMM yyyy HH:mm:ss.SSS", Locale.US);
-	static {
-		dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-	}
+  static final private Calendar gmt = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+  static final private SimpleDateFormat dateFormatGmt = new SimpleDateFormat("dd MMM yyyy HH:mm:ss.SSS", Locale.US);
 
-	private final int legacy;
+  static {
+    dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+  }
 
-	private DayOfWeek(int legacy) {
-		this.legacy = legacy;
-	}
+  private final int legacy;
 
-	public int getLegacyJavaValue() {
-		return legacy;
-	}
+  private DayOfWeek(int legacy) {
+    this.legacy = legacy;
+  }
 
-	public static synchronized DayOfWeek fromTime(long time) {
-		gmt.setTimeInMillis(time);
-		final int result = gmt.get(Calendar.DAY_OF_WEEK);
-		if (result == Calendar.SUNDAY) {
-			return SUNDAY;
-		}
-		return DayOfWeek.values()[result - 2];
-	}
+  public int getLegacyJavaValue() {
+    return legacy;
+  }
 
-	public static synchronized String timeToString(long value) {
-		gmt.setTimeInMillis(value);
-		return fromTime(value).shortName() + " " + dateFormatGmt.format(gmt.getTime());
-	}
+  public static synchronized DayOfWeek fromTime(long time) {
+    gmt.setTimeInMillis(time);
+    final int result = gmt.get(Calendar.DAY_OF_WEEK);
+    if (result == Calendar.SUNDAY) {
+      return SUNDAY;
+    }
+    return DayOfWeek.values()[result - 2];
+  }
 
-	static public String getRegexString() {
-		final StringBuilder sb = new StringBuilder();
-		for (DayOfWeek day : DayOfWeek.values()) {
-			if (sb.length() > 0) {
-				sb.append("|");
-			}
-			sb.append(day.name().substring(0, 3) + "[a-z]*");
-		}
-		return sb.toString();
-	}
+  public static synchronized String timeToString(long value) {
+    gmt.setTimeInMillis(value);
+    return fromTime(value).shortName() + " " + dateFormatGmt.format(gmt.getTime());
+  }
 
-	public static DayOfWeek fromString(String value) {
-		value = StringUtils.goUpperCase(value).substring(0, 3);
-		for (DayOfWeek day : DayOfWeek.values()) {
-			if (day.name().startsWith(value)) {
-				return day;
-			}
-		}
-		throw new IllegalArgumentException();
-	}
+  static public String getRegexString() {
+    final StringBuilder sb = new StringBuilder();
+    for (DayOfWeek day : DayOfWeek.values()) {
+      if (sb.length() > 0) {
+        sb.append("|");
+      }
+      sb.append(day.name().substring(0, 3) + "[a-z]*");
+    }
+    return sb.toString();
+  }
 
-	public DayOfWeek next() {
-		return DayOfWeek.values()[(ordinal() + 1) % 7];
-	}
+  public static DayOfWeek fromString(String value) {
+    value = StringUtils.goUpperCase(value).substring(0, 3);
+    for (DayOfWeek day : DayOfWeek.values()) {
+      if (day.name().startsWith(value)) {
+        return day;
+      }
+    }
+    throw new IllegalArgumentException();
+  }
 
-	public static DayOfWeek fromH(int h) {
-		return DayOfWeek.values()[(h + 5) % 7];
-	}
+  public DayOfWeek next() {
+    return DayOfWeek.values()[(ordinal() + 1) % 7];
+  }
 
-	public String shortName() {
-		return StringUtils.capitalize(java.time.DayOfWeek.valueOf(this.toString()).getDisplayName(TextStyle.SHORT_STANDALONE,Locale.getDefault()));
-	}
+  public static DayOfWeek fromH(int h) {
+    return DayOfWeek.values()[(h + 5) % 7];
+  }
+
+  public String shortName() {
+    return StringUtils.capitalize(java.time.DayOfWeek.valueOf(this.toString()).getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault()));
+  }
 }
