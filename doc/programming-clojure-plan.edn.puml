@@ -1,0 +1,51 @@
+@startgantt
+
+Project starts 2021-06-01
+
+Title Programming with Clojure
+
+projectscale daily zoom 1
+
+Saturday are closed
+Sunday are closed
+2021-06-14 is closed
+
+
+-- Learning --
+
+[Learn Clojure.org] as [learn-clojure-site] starts 2021-06-01 and ends 2021-06-04 
+[Read book "Brave Clojure"] as [read-brave-book] lasts 7 days and starts at [learn-clojure-site]'s end
+[Learn complete] happens after [learn-clojure-site]'s end
+[Learn complete] happens after [read-brave-book]'s end
+
+-- Prerequisites --
+
+[Install clojure tools deps] as [install-clj-tools-deps] lasts 3 days and starts at [read-brave-book]'s end
+[Install babashka] as [install-babashka] lasts 2 days and starts at [install-clj-tools-deps]'s end
+[Install IDEA + Cursive] as [install-idea] lasts 2 days and starts at [install-clj-tools-deps]'s end
+[Ready to programming] happens after [install-clj-tools-deps]'s end
+[Ready to programming] happens after [install-babashka]'s end
+[Ready to programming] happens after [install-idea]'s end
+
+-- Programming --
+
+[Data model] as [data-model] lasts 6 days and starts at [install-idea]'s end
+[Data spec with Malli] as [spec] lasts 4 days and starts at [data-model]'s end
+[Web server with Ring] as [web-server] lasts 4 days and starts at [spec]'s end
+
+[learn-clojure-site] is 100% completed
+[read-brave-book] is 100% completed
+[install-clj-tools-deps] is 20% completed
+[install-babashka] is 50% completed
+[install-idea] is 0% completed
+[data-model] is 0% completed
+[spec] is 0% completed
+[web-server] is 0% completed
+
+[learn-clojure-site] is colored in GreenYellow/Green
+[read-brave-book] is colored in GreenYellow/Green
+[install-clj-tools-deps] is colored in GreenYellow/Red
+[install-babashka] is colored in GreenYellow/Red
+
+
+@endgantt

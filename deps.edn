@@ -14,7 +14,7 @@
              babashka/fs                               {:mvn/version "0.0.5"}
 
              ;; PlantUML
-             net.sourceforge.plantuml/plantuml         {:mvn/version "1.2021.6"}
+             net.sourceforge.plantuml/plantuml         {:mvn/version "1.2021.7"}
 
              ;; file changes events
              hawk/hawk                                 {:mvn/version "0.2.11"}
@@ -23,9 +23,9 @@
              org.clojure/tools.cli                     {:mvn/version "1.0.206"}
 
              ;;logging
-             io.pedestal/pedestal.log                  {:mvn/version "0.5.8"}
-             org.apache.logging.log4j/log4j-core       {:mvn/version "2.14.0"}
-             org.apache.logging.log4j/log4j-slf4j-impl {:mvn/version "2.14.0"}
+             io.pedestal/pedestal.log                  {:mvn/version "0.5.9"}
+             org.apache.logging.log4j/log4j-core       {:mvn/version "2.14.1"}
+             org.apache.logging.log4j/log4j-slf4j-impl {:mvn/version "2.14.1"}
              }
 
  :aliases   {
@@ -44,7 +44,7 @@
 
              :test     {:extra-deps  {org.clojure/test.check        {:mvn/version "1.1.0"}
                                       healthsamurai/matcho          {:mvn/version "0.3.7"}
-                                      lambdaisland/kaocha           {:mvn/version "1.0.829"}
+                                      lambdaisland/kaocha           {:mvn/version "1.0.861"}
                                       lambdaisland/kaocha-cloverage {:mvn/version "1.0.75"}}
                         :extra-paths ["resources" "test" "test/resources"]
                         :jvm-opts    []
@@ -73,7 +73,7 @@
                         :exec-args    {:installer :local :artifact "gantt.jar"}}
 
 
-             :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "0.13.0"}}
+             :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "0.15.0"}}
                         :main-opts  ["-m" "antq.core"]}
 
              }
