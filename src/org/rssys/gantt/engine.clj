@@ -55,6 +55,13 @@
     (format "\nprojectscale %s\n" (name (:project-scale content)))))
 
 
+(defn project-scale-zoom
+  [content]
+  (when (:project-scale-zoom content)
+    (let [{:keys [scale zoom]} (:project-scale-zoom content)]
+      (format "\nprojectscale %s zoom %s\n" (name scale) zoom))))
+
+
 (defn weekend-days
   [content]
   (when (:closed-days content)
@@ -276,6 +283,7 @@
     (conj (project-footer gantt-struc))
     (conj (hide-footbox gantt-struc))
     (conj (project-scale gantt-struc))
+    (conj (project-scale-zoom gantt-struc))
     (into (for [weekend (weekend-days gantt-struc)] weekend))
     (into (for [holiday (holidays gantt-struc)] holiday))
     (into (for [colored-day (days-colors gantt-struc)] colored-day))
@@ -388,6 +396,11 @@
   (def content (make-gantt-content gantt-struc))
   (write-content->file (gantt-content->asciidoc-content content) "07-task-resources.adoc")
   (write-content->file (gantt-content->puml-content content) "07-task-resources.puml")
+
+  (def gantt-struc (read-gantt-struct "test/data/08-project-scale-zoom.edn"))
+  (def content (make-gantt-content gantt-struc))
+  (write-content->file (gantt-content->asciidoc-content content) "08-project-scale-zoom.adoc")
+  (write-content->file (gantt-content->puml-content content) "08-project-scale-zoom.puml")
 
 
   (generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :svg)

@@ -65,6 +65,14 @@
 (def project-scale [:enum {:description "Project scale"} :daily :monthly :weekly :quarterly :yearly])
 
 
+(def project-scale-zoom
+  [:and
+   {:description "Project scale with zoom"}
+   [:map
+    [:scale project-scale]
+    [:zoom {:gen/gen (gen/choose 0 3)} pos-int?]]])
+
+
 (def color
   [:and
    {:description "PlantUML colors https://plantuml.com/en/color"
@@ -307,19 +315,26 @@
     [:project-header {:optional true} header]
     [:project-footer {:optional true} footer]
     [:project-scale {:optional true} project-scale]
+    [:project-scale-zoom {:optional true} project-scale-zoom]
     [:hide-footbox? {:optional true} hide-footbox]
     [:tasks-colors {:optional true} tasks-colors]
     [:days-colors {:optional true} days-colors]
     [:closed-days {:optional true} closed-days]
     [:holidays {:optional true} holidays]
     [:project-content project-content]
-    [:milestones {:optional true} [:vector {:gen/min 1, :gen/max 3} milestone]]]])
+    [:milestones {:optional true} [:vector {:gen/min 1, :gen/max 3} milestone]]]
+   [:fn {:error/message ":project-scale or :project-scale-zoom must present, but only one of them."}
+    (fn [{:keys [project-scale project-scale-zoom]}]
+      (or
+        (and project-scale (nil? project-scale-zoom))
+        (and project-scale-zoom (nil? project-scale))))]])
 
 
 (comment
   (require '[malli.generator :as mg])
   (mg/generate gantt-structure)
   (mg/generate project-content)
+  (mg/generate project-scale-zoom)
   (me/humanize (m/explain task {:name "task3" :alias :t3 :ends-at "2021-05-18" :percent-complete 0 :starts-after :t1}))
   (def gantt-struc {:project-starts "2004-12-15",
                     :project-scale  :yearly,
