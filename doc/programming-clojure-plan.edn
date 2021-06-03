@@ -1,5 +1,6 @@
 {
- :project-title      "Programming with Clojure"
+ :scale "1200*800"
+ :project-title      "Great plan with Clojure"
  :project-starts     "2021-06-01"
  :project-scale-zoom {:scale :daily :zoom 1}
 

@@ -1,0 +1,19 @@
+{
+ :project-starts  "2021-06-01"
+ :project-scale   :daily
+ :scale           "580*400"
+
+ :project-content [{:task             "Task1"
+                    :alias            :t1
+                    :pause-on-days    ["2021-06-03" "2021-06-04"]
+                    :starts-at        "2021-06-01"
+                    :days-lasts       6
+                    :percent-complete 20}
+
+                   {:task             "Task2"
+                    :alias            :t2
+                    :starts-after     :t1
+                    :days-lasts       8
+                    :percent-complete 20}]
+
+ }

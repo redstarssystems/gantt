@@ -1,0 +1,22 @@
+@startgantt
+
+scale 320*180
+
+Title Title1
+
+Header Header1
+
+Footer Footer1
+
+Hide footbox
+
+projectscale daily
+
+
+[Task1] as [t1] lasts 10 days
+
+[t1] is 20% completed
+
+
+
+@endgantt

@@ -1,0 +1,23 @@
+{
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; example resources for task
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ :project-starts  "2021-06-01"
+ :project-scale   :daily
+ :scale           "640*480"
+
+ :project-content [{:task             "Task1"
+                    :alias            :t1
+                    :starts-at        "2021-06-01"
+                    :days-lasts       6
+                    :resources        ["Mike" "Olga:50%"]
+                    :percent-complete 20}
+
+                   {:task             "Task2"
+                    :alias            :t2
+                    :starts-after     :t1
+                    :days-lasts       8
+                    :resources        ["Olga:50%"]
+                    :percent-complete 20}]
+
+ }

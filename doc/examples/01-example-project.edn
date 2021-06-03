@@ -1,0 +1,11 @@
+{:project-title   "Title1"
+ :project-header  "Header1"
+
+ :project-scale   :daily
+
+ :project-content [{:task             "Task1"
+                    :alias            :t1
+                    :days-lasts       10
+                    :percent-complete 20}]
+
+ }
