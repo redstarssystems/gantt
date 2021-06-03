@@ -1,0 +1,72 @@
+{
+ :project-title      "Programming with Clojure"
+ :project-starts     "2021-06-01"
+ :project-scale-zoom {:scale :daily :zoom 1}
+
+ :tasks-colors       {:color/in-progress "GreenYellow/Red"
+                      :color/completed   "GreenYellow/Green"}
+
+ :closed-days        #{:saturday :sunday}
+ :holidays           ["2021-06-14"]
+
+ :project-content    [{:separator "Learning"}
+
+                      {:task             "Learn Clojure.org"
+                       :alias            :learn-clojure-site
+                       :starts-at        "2021-06-01"
+                       :ends-at          "2021-06-04"
+                       :percent-complete 100}
+
+                      {:task             "Read book \"Brave Clojure\""
+                       :alias            :read-brave-book
+                       :starts-after     :learn-clojure-site
+                       :days-lasts       7
+                       :percent-complete 100}
+
+                      {:milestone     "Learn complete"
+                       :happens-after [:learn-clojure-site :read-brave-book]}
+
+                      {:separator "Prerequisites"}
+
+                      {:task             "Install clojure tools deps"
+                       :alias            :install-clj-tools-deps
+                       :starts-after     :read-brave-book
+                       :days-lasts       3
+                       :percent-complete 20}
+
+                      {:task             "Install babashka"
+                       :alias            :install-babashka
+                       :starts-after     :install-clj-tools-deps
+                       :days-lasts       2
+                       :percent-complete 50}
+
+                      {:task             "Install IDEA + Cursive"
+                       :alias            :install-idea
+                       :starts-after     :install-clj-tools-deps
+                       :days-lasts       2
+                       :percent-complete 0}
+
+                      {:milestone     "Ready to programming"
+                       :happens-after [:install-clj-tools-deps :install-babashka :install-idea]}
+
+                      {:separator "Programming"}
+
+                      {:task             "Data model"
+                       :alias            :data-model
+                       :starts-after     :install-idea
+                       :days-lasts       6
+                       :percent-complete 0}
+
+                      {:task             "Data spec with Malli"
+                       :alias            :spec
+                       :starts-after     :data-model
+                       :days-lasts       4
+                       :percent-complete 0}
+
+                      {:task             "Web server with Ring"
+                       :alias            :web-server
+                       :starts-after     :spec
+                       :days-lasts       4
+                       :percent-complete 0}
+                      ]
+ }
