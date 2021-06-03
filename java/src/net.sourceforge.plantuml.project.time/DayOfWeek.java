@@ -109,6 +109,8 @@ public enum DayOfWeek {
   }
 
   public String shortName() {
-    return StringUtils.capitalize(java.time.DayOfWeek.valueOf(this.toString()).getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault()));
+    Locale locale = Locale.getDefault();
+    String s = StringUtils.capitalize(java.time.DayOfWeek.valueOf(this.toString()).getDisplayName(TextStyle.SHORT_STANDALONE, locale));
+    return s.substring(0,2);
   }
 }
