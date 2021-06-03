@@ -126,11 +126,11 @@ requirements Install project requirements
 === License
 
 This work is dual-licensed under Eclipse Public License 2.0 and GPL 3.0. +
-Only java source code `java/src` is under GPL 3.0. (C) Copyright 2009-2020, Arnaud Roques + 
+PlantUML and java sources in  `java/src` are under GPL 3.0. (C) Copyright 2009-2020, Arnaud Roques + 
 
 Rest of the program is under EPL 2.0. Copyright © 2021 Mikhail Ananev +
 You can choose between one of them if you use this work. +
 
-`SPDX-License-Identifier: EPL-2.0 OR GPL-3.0-or-later`
+`SPDX-License-Identifier: EPL-2.0 AND GPL-3.0-or-later`
 
 
