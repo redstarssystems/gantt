@@ -1,0 +1,46 @@
+@startgantt
+
+Project starts 2021-05-31
+
+scale 1900*1300
+
+Title Sprint № 
+
+Header Status: future
+
+Hide footbox
+
+projectscale daily zoom 3
+
+Saturday are closed
+Sunday are closed
+2021-06-14 is closed
+
+
+-- Analytics --
+
+[Task 1] as [t1] starts 2021-06-01 and ends 2021-06-04 
+[Task 2] as [t2] lasts 4 days and starts at [t1]'s end
+
+-- Development --
+
+[Task 3] as [t3] starts 2021-06-01 and ends 2021-06-04 
+[Task 4] as [t4] lasts 4 days and starts at [t3]'s end
+
+-- QA Testing & Release --
+
+[Task5 5] as [t5] starts 2021-06-01 and ends 2021-06-04 
+[Task 6] as [t6] lasts 4 days and starts at [t5]'s end
+[Release date] happens after [t5]'s end
+[Release date] happens after [t6]'s end
+
+[t1] on {Name1} {Name2:50%}  is 0% completed
+[t2] on {Name3}  is 0% completed
+[t3] on {Name3} {Name4:50%}  is 0% completed
+[t4] on {Name5}  is 0% completed
+[t5] on {Name7} {Name8:50%}  is 0% completed
+[t6] on {Name9}  is 0% completed
+
+
+
+@endgantt

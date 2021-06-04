@@ -1,0 +1,77 @@
+{
+ :scale              "1900*1300"                            ;; picture size
+
+ :project-title      "Sprint № "                            ;; sprint number
+ :project-header     "Status: future"                       ;; status: future or completed
+ :project-starts     "2021-05-31"                           ;; sprint start date
+ :project-scale-zoom {:scale :daily :zoom 3}
+
+ :tasks-colors       {:color/in-progress "GreenYellow/Red"
+                      :color/completed   "GreenYellow/Green"}
+
+ :closed-days        #{:saturday :sunday}                   ;; weekends
+ :holidays           ["2021-06-14"]                         ;; holidays
+
+ :hide-footbox?      true                                   ;; hide calendar at the bottom
+
+ :project-content    [
+                      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      {:separator "Analytics"}
+
+                      {:task             "Task 1"
+                       :alias            :t1
+                       :resources        ["Name1" "Name2:50%"]
+                       :starts-at        "2021-06-01"
+                       :ends-at          "2021-06-04"
+                       ;; :color            "Red/Red"       ;; uncomment at the end of a sprint if task is not completed
+                       :percent-complete 0}
+
+                      {:task             "Task 2"
+                       :alias            :t2
+                       :resources        ["Name3"]
+                       :starts-after     :t1
+                       :days-lasts       4
+                       ;; :color            "Red/Red"       ;; uncomment at the end of a sprint if task is not completed
+                       :percent-complete 0}
+                      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      {:separator "Development"}
+
+                      {:task             "Task 3"
+                       :alias            :t3
+                       :resources        ["Name3" "Name4:50%"]
+                       :starts-at        "2021-06-01"
+                       :ends-at          "2021-06-04"
+                       ;; :color            "Red/Red"        ;; uncomment at the end of a sprint if task is not completed
+                       :percent-complete 0}
+
+                      {:task             "Task 4"
+                       :alias            :t4
+                       :resources        ["Name5"]
+                       :starts-after     :t3
+                       :days-lasts       4
+                       ;; :color            "Red/Red"      ;; uncomment at the end of a sprint if task is not completed
+                       :percent-complete 0}
+
+                      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      {:separator "QA Testing & Release"}
+
+                      {:task             "Task5 5"
+                       :alias            :t5
+                       :resources        ["Name7" "Name8:50%"]
+                       :starts-at        "2021-06-01"
+                       :ends-at          "2021-06-04"
+                       ;; :color            "Red/Red"       ;; uncomment at the end of a sprint if task is not completed
+                       :percent-complete 0}
+
+                      {:task             "Task 6"
+                       :alias            :t6
+                       :resources        ["Name9"]
+                       :starts-after     :t5
+                       :days-lasts       4
+                       ;; :color            "Red/Red"       ;; uncomment at the end of a sprint if task is not completed
+                       :percent-complete 0}
+
+                      {:milestone     "Release date"
+                       :happens-after [:t5 :t6]}
+                      ]
+ }
