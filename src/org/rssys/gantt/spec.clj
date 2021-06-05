@@ -86,6 +86,12 @@
    [:color/in-progress {:optional true} color]
    [:color/completed {:optional true} color]])
 
+(def today
+  [:map
+   {:description "Highlight today"}
+   [:color{:optional true} color]
+   [:days-after-start  pos-int?]])
+
 
 (def days-colors
   [:vector
@@ -321,6 +327,7 @@
     [:days-colors {:optional true} days-colors]
     [:closed-days {:optional true} closed-days]
     [:holidays {:optional true} holidays]
+    [:today {:optional true} today]
     [:project-content project-content]
     [:milestones {:optional true} [:vector {:gen/min 1, :gen/max 3} milestone]]]
    [:fn {:error/message ":project-scale or :project-scale-zoom must present, but only one of them."}

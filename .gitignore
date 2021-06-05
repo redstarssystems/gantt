@@ -1,6 +1,7 @@
 # exclude whole folders with logs
 log
 logs
+planning
 
 # exclude clj-kondo files except config
 .clj-kondo/*

@@ -89,6 +89,13 @@
                            (for [date (:days-list day)]
                              (format "\n%s is colored in %s" date (:color day))))))))
 
+(defn today
+  [content]
+  (when (:today content)
+    (if (-> content :today :color)
+      (format "\ntoday is %s day after start and is colored in %s\n" (-> content :today :days-after-start) (-> content :today :color))
+      (format "\ntoday is %s day after start\n" (-> content :today :days-after-start)))))
+
 
 (defmulti process-content "process content"
   (fn [{:keys [separator task milestone] :as item}]
@@ -280,6 +287,7 @@
     (conj (scale gantt-struc))
     (conj (project-title gantt-struc))
     (conj (project-header gantt-struc))
+    (conj (today gantt-struc))
     (conj (project-footer gantt-struc))
     (conj (hide-footbox gantt-struc))
     (conj (project-scale gantt-struc))

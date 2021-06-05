@@ -357,6 +357,15 @@ To set days of week closed for work use flag `:closed-days`:
 
 Possible values are: `:sunday :monday :tuesday :wednesday :thursday :friday :saturday`
 
+=== Highlight today
+
+To highlight today use flag `:today`: +
+[source, clojure]
+----
+{ :today       {:days-after-start 10 :color "#AAF"}}
+----
+
+
 === Milestones
 
 Milestone is an important point for the project.
