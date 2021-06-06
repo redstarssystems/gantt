@@ -85,11 +85,11 @@
       <url>https://repo.clojars.org/</url>
     </repository>
   </repositories>
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/redstarssystems/gantt</url>
-        </repository>
-    </distributionManagement>
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/redstarssystems/gantt</url>
+    </repository>
+  </distributionManagement>
 </project>
