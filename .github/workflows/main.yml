@@ -38,6 +38,16 @@ jobs:
         with:
           babashka-version: 0.4.4
 
+      # install clojure tools deps
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@3.4
+        with:
+          # Install just one or all simultaneously
+          cli: 1.10.3.855 # Clojure CLI based on tools.deps
+          lein: 2.9.6     # or use 'latest' to always provision latest version of leiningen
+          boot: 2.8.3     # or use 'latest' to always provision latest version of boot
+
+
       # Run tests
       - name: Run tests
         run: bb test
