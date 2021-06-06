@@ -15,21 +15,18 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+
+  # Install prerequisites
+  setup:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
       # setup JDK
-      - name: Set up JDK 11
+      - name: Set up JDK 16
         uses: actions/setup-java@v2
         with:
-          java-version: '11'
+          java-version: '16'
           distribution: 'adopt'
 
       # Setup babashka
@@ -38,7 +35,7 @@ jobs:
         with:
           babashka-version: 0.4.4
 
-      # install clojure tools deps
+      # install clojure tools deps, lein and boot
       - name: Install clojure tools
         uses: DeLaGuardo/setup-clojure@3.4
         with:
@@ -47,10 +44,32 @@ jobs:
           lein: 2.9.6     # or use 'latest' to always provision latest version of leiningen
           boot: 2.8.3     # or use 'latest' to always provision latest version of boot
 
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
 
+  test:
+    # install all prerequisites
+    needs: [setup]
+
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
       # Run tests
       - name: Run tests
         run: bb test
+
+  build:
+
+    # install all prerequisites
+    needs: [test]
+
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
 
       # Build distr
       - name: Build distr
