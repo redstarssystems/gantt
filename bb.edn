@@ -14,7 +14,7 @@
                                 formatter (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss")]
                             (.format date formatter)))
                         (def config (load-config :file "project-config.edn"))
-                        (def secrets (load-config :file "project-secrets.edn"))
+                        ;;(def secrets (load-config :file "project-secrets.edn"))
                         (def env (from-env))
                         (def version-file "project-version")
                         (def version-id (clojure.string/trim (slurp version-file)))
