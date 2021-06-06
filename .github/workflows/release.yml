@@ -1,10 +1,18 @@
 name: Publish package to GitHub Packages
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - '*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 jobs:
+
   publish:
+    name: Create release-artifacts
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       packages: write
