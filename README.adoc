@@ -18,7 +18,7 @@ This program (named `gantt`) is based on link:https://github.com/plantuml/plantu
 Program `gantt` uses some subset of PlantUML Gantt syntax to describe a project, its structure, and progress. +
 
 Program `gantt` transforms: `EDN data` -> `SVG/PNG` picture without any external dependencies. 
-Also, it produces intermediate `puml`-file for ervery picture. +
+Also, it produces intermediate `puml`-file for every picture. +
 
 To produce the picture above the following command was used:
 
