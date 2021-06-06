@@ -1,12 +1,12 @@
 name: Publish package to GitHub Packages
 on:
-  release:
-    types: [created]
+#  release:
+#    types: [created]
 
 # react on every push with tags
-#  push:
-#    tags:
-#      - '*'
+  push:
+    tags:
+      - '*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -56,19 +56,19 @@ jobs:
 
       # Publish binary Github releases
       - name: Upload binaries to release
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: 'target/gantt*.jar'
-#        uses: svenstaro/upload-release-action@v2
+#        uses: skx/github-action-publish-binaries@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #        with:
-#          repo_token: ${{ secrets.GITHUB_TOKEN }}
-#          file: target/gantt*.jar
-#          asset_name: gantt
-#          tag: ${{ github.ref }}
-#          overwrite: true
-#          body: "This is Gantt distro."
+#          args: 'target/gantt*.jar'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/gantt*.jar
+          asset_name: gantt
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "This is new Gantt release."
 
       # Publish package as jar file to maven repo on Github
 #      - name: Publish package

@@ -1,6 +1,6 @@
 == Changelog
 
-=== [0.1.1-SNAPSHOT] - 2021-06-06
+=== [0.1.1] - 2021-06-06
 
 .Added:
 - Delete intermediate `puml` file
