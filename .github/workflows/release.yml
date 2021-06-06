@@ -1,8 +1,12 @@
 name: Publish package to GitHub Packages
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    types: [created]
+
+# react on every push with tags
+#  push:
+#    tags:
+#      - '*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
