@@ -50,8 +50,19 @@ jobs:
       - name: Build distr
         run: bb build
 
-      # Publish package
-      - name: Publish package
-        run: mvn --batch-mode deploy
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Publish binary Github releases
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/gantt-*.jar
+          asset_name: gantt
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "This is Gantt distro."
+
+      # Publish package as jar file to maven repo on Github
+#      - name: Publish package
+#        run: mvn --batch-mode deploy
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
