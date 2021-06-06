@@ -16,11 +16,11 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  # Install prerequisites
-  setup:
+  test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # setup JDK
       - name: Set up JDK 16
@@ -47,22 +47,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-  test:
-    # install all prerequisites
-    needs: [setup]
-
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
       # Run tests
       - name: Run tests
         run: bb test
 
   build:
 
-    # install all prerequisites
     needs: [test]
 
     # The type of runner that the job will run on
@@ -70,7 +60,37 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # setup JDK
+      - name: Set up JDK 16
+        uses: actions/setup-java@v2
+        with:
+          java-version: '16'
+          distribution: 'adopt'
+
+      # Setup babashka
+      - name: Set up babashka
+        uses: turtlequeue/setup-babashka@v1.3.0
+        with:
+          babashka-version: 0.4.4
+
+      # install clojure tools deps, lein and boot
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@3.4
+        with:
+          # Install just one or all simultaneously
+          cli: 1.10.3.855 # Clojure CLI based on tools.deps
+          lein: 2.9.6     # or use 'latest' to always provision latest version of leiningen
+          boot: 2.8.3     # or use 'latest' to always provision latest version of boot
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
 
       # Build distr
       - name: Build distr
         run: bb build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: gantt
+          path: target/*.jar
