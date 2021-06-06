@@ -89,6 +89,7 @@
                            (for [date (:days-list day)]
                              (format "\n%s is colored in %s" date (:color day))))))))
 
+
 (defn today
   [content]
   (when (:today content)

@@ -41,6 +41,8 @@
    ["-o" "--output-folder FOLDER" "Output folder to write Gantt diagrams"
     :validate [#(or (= % ":input-folder") (fs/directory? %)) "Output folder should exist or use value `:input-folder` to put result in input folder"]]
 
+   [nil "--delete-puml" "Delete intermediate `puml` file"]
+
    ["-h" "--help"]])
 
 

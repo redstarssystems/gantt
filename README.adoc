@@ -24,7 +24,7 @@ To produce the picture above the following command was used:
 
 [source,bash]
 ----
-java -Duser.language=en -Djava.awt.headless=true -jar gantt-0.1.0-SNAPSHOT-standalone.jar -f svg -i ./doc -o :input-folder generate
+java -Duser.language=en -Djava.awt.headless=true -jar gantt.jar -f svg -i ./doc -o :input-folder generate
 ----
 
 Click here to see link:doc/programming-clojure-plan.edn[EDN source] for the picture above using link:https://github.com/edn-format/edn[EDN format]. +
@@ -64,7 +64,7 @@ toc::[]
 
 [source,bash]
 ----
-java  -jar target/gantt-0.1.0-SNAPSHOT-standalone.jar --help
+$ java -jar gantt.jar --help
 Gantt diagram generator.
 
 Usage: program-name [options] action
@@ -75,6 +75,7 @@ Options:
   -i, --input-folder FOLDER              Input folder with EDN-files
   -f, --file-format FORMAT    png        PNG or SVG format for output files
   -o, --output-folder FOLDER             Output folder to write Gantt diagrams
+      --delete-puml                      Delete intermediate `puml` file
   -h, --help
 
 Actions:
@@ -99,7 +100,7 @@ Example:
 
 [source,bash]
 ----
-java -Duser.language=en -Djava.awt.headless=true -jar gantt-0.1.0-SNAPSHOT-standalone.jar -f svg -i ./doc -o :input-folder generate
+$ java -Duser.language=en -Djava.awt.headless=true -jar gantt.jar -f svg -i ./doc -o :input-folder generate
 ----
 
 `-Djava.awt.headless=true` is used to prevent loss of focus in other programs. +
@@ -115,7 +116,7 @@ The program will catch any `create` or `update` file-system event for EDN-files 
 
 [source,bash]
 ----
-mike@mbp gantt git:(develop) ✗ java -Duser.language=en -Djava.awt.headless=true -jar gantt-0.1.0-SNAPSHOT-standalone.jar -f png -i /Users/mike/projects/gantt/doc -o :input-folder watch
+$ java -Duser.language=en -Djava.awt.headless=true -jar gantt.jar -f png -i /Users/mike/projects/gantt/doc -o :input-folder watch
 Starting watchdog for folder: /Users/mike/projects/gantt/doc
 Press <Enter> to exit.
 

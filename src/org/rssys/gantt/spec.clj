@@ -86,10 +86,11 @@
    [:color/in-progress {:optional true} color]
    [:color/completed {:optional true} color]])
 
+
 (def today
   [:map
    {:description "Highlight today"}
-   [:color{:optional true} color]
+   [:color {:optional true} color]
    [:days-after-start  pos-int?]])
 
 
