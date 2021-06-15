@@ -91,7 +91,7 @@
   [:map
    {:description "Highlight today"}
    [:color {:optional true} color]
-   [:days-after-start  pos-int?]])
+   [:days-after-start  nat-int?]])
 
 
 (def days-colors
