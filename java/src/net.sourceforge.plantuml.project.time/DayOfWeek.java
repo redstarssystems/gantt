@@ -50,7 +50,6 @@ public enum DayOfWeek {
 
   static final private Calendar gmt = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
   static final private SimpleDateFormat dateFormatGmt = new SimpleDateFormat("dd MMM yyyy HH:mm:ss.SSS", Locale.US);
-
   static {
     dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
   }
@@ -74,10 +73,10 @@ public enum DayOfWeek {
     return DayOfWeek.values()[result - 2];
   }
 
-  public static synchronized String timeToString(long value) {
-    gmt.setTimeInMillis(value);
-    return fromTime(value).shortName() + " " + dateFormatGmt.format(gmt.getTime());
-  }
+//	private static synchronized String timeToString(Locale locale, long value) {
+//		gmt.setTimeInMillis(value);
+//		return fromTime(value).shortName(locale) + " " + dateFormatGmt.format(gmt.getTime());
+//	}
 
   static public String getRegexString() {
     final StringBuilder sb = new StringBuilder();
@@ -108,9 +107,11 @@ public enum DayOfWeek {
     return DayOfWeek.values()[(h + 5) % 7];
   }
 
-  public String shortName() {
-    Locale locale = Locale.getDefault();
+//  PlantUML has a bug: locale is always EN here
+  public String shortName(Locale locale) {
+    locale = Locale.getDefault();
     String s = StringUtils.capitalize(java.time.DayOfWeek.valueOf(this.toString()).getDisplayName(TextStyle.SHORT_STANDALONE, locale));
     return s.substring(0,2);
+
   }
 }

@@ -5,12 +5,12 @@
  * (C) Copyright 2009-2020, Arnaud Roques
  *
  * Project Info:  http://plantuml.com
- * 
+ *
  * If you like this project or if you find it useful, you can support us at:
- * 
+ *
  * http://plantuml.com/patreon (only 1$ per month!)
  * http://plantuml.com/paypal
- * 
+ *
  * This file is part of PlantUML.
  *
  * PlantUML is free software; you can redistribute it and/or modify it
@@ -30,70 +30,81 @@
  *
  *
  * Original Author:  Arnaud Roques
- * 
+ *
  *
  */
 package net.sourceforge.plantuml.project.time;
 
-import net.sourceforge.plantuml.StringUtils;
-
-import java.text.DateFormatSymbols;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
+import net.sourceforge.plantuml.StringUtils;
+
 public enum Month {
 
-	JANUARY(31), FEBRUARY(28), MARCH(31), APRIL(30), MAY(31), JUNE(30), //
-	JULY(31), AUGUST(31), SEPTEMBER(30), OCTOBER(31), NOVEMBER(30), DECEMBER(31);
+  JANUARY(31), FEBRUARY(28), MARCH(31), APRIL(30), MAY(31), JUNE(30), //
+  JULY(31), AUGUST(31), SEPTEMBER(30), OCTOBER(31), NOVEMBER(30), DECEMBER(31);
 
-	private final int daysPerMonth;
+  private final int daysPerMonth;
 
-	private Month(int daysPerMonth) {
-		this.daysPerMonth = daysPerMonth;
-	}
+  private Month(int daysPerMonth) {
+    this.daysPerMonth = daysPerMonth;
+  }
 
-	public String shortName() {
-		return StringUtils.capitalize(java.time.Month.valueOf(this.toString()).getDisplayName(TextStyle.SHORT_STANDALONE,Locale.getDefault()));
-	}
+  //  PlantUML has a bug: locale is always EN here
+  public String shortName(Locale locale) {
+    return StringUtils.capitalize(java.time.Month.valueOf(this.toString()).getDisplayName(TextStyle.SHORT_STANDALONE,Locale.getDefault()));
+  }
 
-	public String longName() {
-		return StringUtils.capitalize(java.time.Month.valueOf(this.toString()).getDisplayName(TextStyle.FULL_STANDALONE,Locale.getDefault()));
-	}
+  private java.time.Month getJavaTimeMonth() {
+    return java.time.Month.valueOf(this.toString());
+  }
 
-	static public String getRegexString() {
-		final StringBuilder sb = new StringBuilder();
-		for (Month month : Month.values()) {
-			if (sb.length() > 0) {
-				sb.append("|");
-			}
-			sb.append(month.name().substring(0, 3) + "[a-z]*");
-		}
-		return sb.toString();
-	}
+  //  PlantUML has a bug: locale is always EN here
+  public String longName(Locale locale) {
+    return StringUtils.capitalize(java.time.Month.valueOf(this.toString()).getDisplayName(TextStyle.FULL_STANDALONE,Locale.getDefault()));
+  }
 
-	public static Month fromString(String value) {
-		value = StringUtils.goUpperCase(value).substring(0, 3);
-		for (Month m : Month.values()) {
-			if (m.name().startsWith(value)) {
-				return m;
-			}
-		}
-		throw new IllegalArgumentException();
-	}
+  private String longest(String v1, String v2) {
+    if (v1.length() > v2.length())
+      return v1;
+    return v2;
+  }
 
-	public final int getDaysPerMonth(int year) {
-		if (this == FEBRUARY && year % 4 == 0) {
-			return 29;
-		}
-		return daysPerMonth;
-	}
+  static public String getRegexString() {
+    final StringBuilder sb = new StringBuilder();
+    for (Month month : Month.values()) {
+      if (sb.length() > 0) {
+        sb.append("|");
+      }
+      sb.append(month.name().substring(0, 3) + "[a-z]*");
+    }
+    return sb.toString();
+  }
 
-	public Month next() {
-		return Month.values()[(this.ordinal() + 1) % 12];
-	}
+  public static Month fromString(String value) {
+    value = StringUtils.goUpperCase(value).substring(0, 3);
+    for (Month m : Month.values()) {
+      if (m.name().startsWith(value)) {
+        return m;
+      }
+    }
+    throw new IllegalArgumentException();
+  }
 
-	public int m() {
-		return 3 + (ordinal() + 10) % 12;
-	}
+  public final int getDaysPerMonth(int year) {
+    if (this == FEBRUARY && year % 4 == 0) {
+      return 29;
+    }
+    return daysPerMonth;
+  }
+
+  public Month next() {
+    return Month.values()[(this.ordinal() + 1) % 12];
+  }
+
+  public int m() {
+    return 3 + (ordinal() + 10) % 12;
+  }
 
 }

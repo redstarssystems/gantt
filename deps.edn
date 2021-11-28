@@ -14,7 +14,7 @@
              babashka/fs                               {:mvn/version "0.0.5"}
 
              ;; PlantUML
-             net.sourceforge.plantuml/plantuml         {:mvn/version "1.2021.7"}
+             net.sourceforge.plantuml/plantuml         {:mvn/version "1.2021.14"}
 
              ;; file changes events
              hawk/hawk                                 {:mvn/version "0.2.11"}
