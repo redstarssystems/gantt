@@ -1,6 +1,13 @@
 == Changelog
 
-=== [0.1.2] - future release
+=== [0.1.3]
+
+.Added
+- web server implementation. Now we can expose _png/svg_ files in `input-folder` via web. Other file types are ignored. `input-folder` is used as root of web context.
+
+.Updated
+- version `log4j2` up to 2.15.0
+- version of PlantUML to latest
 
 .Fixed:
 - spec for today changed from pos-int to nat-int
