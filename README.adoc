@@ -13,7 +13,7 @@ image:doc/programming-clojure-plan.edn.svg[Demo plan]
 
 == Quick Intro
 
-This program (named `gantt`) is based on link:https://github.com/plantuml/plantuml[PlantUML] v1.2021.7. +
+This program (named `gantt`) is based on link:https://github.com/plantuml/plantuml[PlantUML] v1.2021.14. +
 
 Program `gantt` uses some subset of PlantUML Gantt syntax to describe a project, its structure, and progress. +
 
@@ -128,7 +128,21 @@ Press <Enter> to exit.
 
 === Server mode
 
-not implemented.
+This mode is activated by `server` action and starts two long-running processes. First process – `watchdog` mode is running to
+automatically update pictures. Second process – `web server` which is expose _PNG/SVG_ files as static resources. All other
+filetypes are filtered and never exposed via web.
+
+[source,bash]
+----
+java -Duser.language=ru -Djava.awt.headless=true -jar target/gantt-0.1.3-standalone.jar -f svg -i /Users/mike/projects/planning -o :input-folder --delete-puml server  -s 0.0.0.0
+Starting watchdog for folder: /Users/mike/projects/planning
+Running web server on address 0.0.0.0 and port 8080
+Serving /Users/mike/projects/planning folder. Use it as root path to access image files.
+Press <Enter> to stop watching.
+Press <Ctrl-C> to exit
+----
+
+
 
 == Syntax
 
