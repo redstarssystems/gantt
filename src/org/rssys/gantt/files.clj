@@ -49,13 +49,13 @@
   [{:keys [input-folder output-folder file-format delete-puml]}]
   (println "Starting watchdog for folder:" input-folder)
   (hawk/watch! [{:paths   [input-folder]
-                 :filter  (fn [ctx e] (and (fs/regular-file? (:file e)) (= "edn" (fs/extension (:file e)))))
-                 :handler (fn [ctx e]
+                 :filter  (fn [_ e] (and (fs/regular-file? (:file e)) (= "edn" (fs/extension (:file e)))))
+                 :handler (fn [_ e]
                             (when (some #{:create :modify} [(:kind e)])
                               (try
                                 (generate-gantt-from-edn (str (:file e)) output-folder file-format delete-puml)
                                 (catch Exception e
                                   (println (.getMessage e) \newline)))))}])
-  (println "Press <Enter> to exit.")
+  (println "Press <Enter> to stop watching.")
   (read-line))
 

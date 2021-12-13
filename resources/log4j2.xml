@@ -37,7 +37,7 @@
 
     <Loggers>
 
-        <Logger name="org.rssys.gantt" level="debug" additivity="false">
+        <Logger name="org.rssys.gantt" level="error" additivity="false">
             <AppenderRef ref="Console-edn"/>
         </Logger>
 
@@ -46,7 +46,7 @@
         </Logger>
 
 
-        <Root level="info">
+        <Root level="error">
             <AppenderRef ref="Console-java"/>
             <!--            <AppenderRef ref="RollingFile"/>-->
         </Root>

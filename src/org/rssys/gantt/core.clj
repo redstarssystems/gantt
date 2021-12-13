@@ -4,10 +4,8 @@
     [babashka.fs :as fs]
     [clojure.string :as string]
     [clojure.tools.cli :as cli]
-    [org.rssys.gantt.files :as files])
-  (:import
-    (java.net
-      InetAddress)))
+    [org.rssys.gantt.files :as files]
+    [org.rssys.gantt.web.server :as server]))
 
 
 (defn set-global-exception-hook
@@ -27,9 +25,8 @@
     :validate [#(< 0 % 0x10000) "Must be a number between 0 and 65536"]]
 
    ["-s" "--server HOST" "start HTTP server using this hostname"
-    :default (InetAddress/getByName "localhost")
-    :default-desc "localhost"
-    :parse-fn #(InetAddress/getByName %)]
+    :default "localhost"
+    :default-desc "localhost"]
 
    ["-i" "--input-folder FOLDER" "Input folder with EDN-files"
     :validate [#(fs/directory? %) "Input folder should exist"]]
@@ -105,7 +102,10 @@
     (if exit-message
       (exit (if ok? 0 1) exit-message)
       (case action
-        "server" (println "running http server...")
+        "server" (binding [server/*dev-mode* false]
+                   ;; (println options)
+                   (future (files/watch options))
+                   (server/run options))
         "watch" (files/watch options)
         "generate" (files/generate options))))
-  (System/exit 0))
+  (println "Press <Ctrl-C> to exit"))
