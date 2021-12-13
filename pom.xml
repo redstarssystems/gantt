@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.rssys</groupId>
   <artifactId>gantt</artifactId>
-  <version>0.1.3</version>
+  <version>0.1.4</version>
   <name>gantt</name>
   <description>FIXME project name.</description>
   <url>https://github.com/FIXME</url>

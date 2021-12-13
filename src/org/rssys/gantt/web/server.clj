@@ -48,18 +48,19 @@
 
 
 (defn make-handler
-  [{:keys [input-folder]}]
-  (prf "Serving %s folder. Use it as root path to access image files." input-folder)
-  (reitit.ring/ring-handler
-    (router/make-router)
-    (reitit.ring/routes
-      (reitit.ring/create-file-handler {:path "/" :root input-folder})
-      ;; (reitit.ring/create-resource-handler {:path "/" :root "public"})
-      (reitit.ring/create-default-handler))
-    {:middleware [wrap-site-defaults
-                  wrap-site-session
-                  only-images-middleware
-                  content-type/wrap-content-type]}))
+  [{:keys [input-folder output-folder]}]
+  (let  [output-folder (if (= ":input-folder" output-folder) input-folder output-folder)]
+    (prf "Serving %s folder. Use it as root path to access image files." output-folder)
+    (reitit.ring/ring-handler
+      (router/make-router)
+      (reitit.ring/routes
+        (reitit.ring/create-file-handler {:path "/" :root output-folder})
+        ;; (reitit.ring/create-resource-handler {:path "/" :root "public"})
+        (reitit.ring/create-default-handler))
+      {:middleware [wrap-site-defaults
+                    wrap-site-session
+                    only-images-middleware
+                    content-type/wrap-content-type]})))
 
 
 (def ^:dynamic *dev-mode* true)
