@@ -1,5 +1,11 @@
 == Changelog
 
+
+=== [0.1.7] - 2022-06-12
+.Fixed
+- locale for Calendar. Now we use PlantUML classes for Calendar locale control because they were fixed;
+
+
 === [0.1.6] - 2022-06-12
 .Added
 - task :links-to property to support PlantUML Gantt task `links to` directive. 

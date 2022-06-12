@@ -100,11 +100,10 @@ Example:
 
 [source,bash]
 ----
-$ java -Duser.language=en -Djava.awt.headless=true -jar gantt.jar -f svg -i ./doc -o :input-folder generate
+$ java -Djava.awt.headless=true -jar gantt.jar -f svg -i ./doc -o :input-folder generate
 ----
 
 `-Djava.awt.headless=true` is used to prevent loss of focus in other programs. +
-`-Duser.language=en` is used to control Locale for days and months in output PNG/SVG pictures. +
 
 === Watchdog mode
 
@@ -116,14 +115,13 @@ The program will catch any `create` or `update` file-system event for EDN-files 
 
 [source,bash]
 ----
-$ java -Duser.language=en -Djava.awt.headless=true -jar gantt.jar -f png -i /Users/mike/projects/gantt/doc -o :input-folder watch
+$ java -Djava.awt.headless=true -jar gantt.jar -f png -i /Users/mike/projects/gantt/doc -o :input-folder watch
 Starting watchdog for folder: /Users/mike/projects/gantt/doc
 Press <Enter> to exit.
 
 ----
 
 `-Djava.awt.headless=true` is used to prevent loss of focus in other programs. +
-`-Duser.language=en` is used to control Locale for days and months in output PNG/SVG pictures. +
 
 
 === Server mode
@@ -288,13 +286,12 @@ image:doc/examples/project-start-date.edn.svg[start date]
 
 === Locale & Calendar
 
-The current version of PlantUML has hardcoded English values for the days of week and months. +
+If you want to change locale to Russian then just add:
+----
+:inline-text-begin "language ru"
+----
 
-The `gantt` has some hacks to avoid this behavior and displays days and months according to the JVM locale. +
-
-If you want to change locale to Russian then just run JVM for this program with flag `-Duser.language=ru`. +
-
-By default, `gantt` will take locale from the operating system.
+By default, `gantt` will take locale from the operating system (default JVM locale).
 
 === Colors
 
