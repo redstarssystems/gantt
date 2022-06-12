@@ -35,7 +35,7 @@
     :default "png"
     :validate [#(some #{"png" "svg"} [%]) "Should be `png` or `svg`."]]
 
-   ["-o" "--output-folder FOLDER" "Output folder to write Gantt diagrams"
+   ["-o" "--output-folder FOLDER" "Output folder to write Gantt diagrams. Use value `:input-folder` to put result in the input folder."
     :validate [#(or (= % ":input-folder") (fs/directory? %)) "Output folder should exist or use value `:input-folder` to put result in input folder"]]
 
    [nil "--delete-puml" "Delete intermediate `puml` file"]
@@ -79,7 +79,7 @@
       errors                                                ; errors => exit with description of errors
       {:exit-message (error-msg errors)}
       (not (and (:input-folder options) (:output-folder options)))
-      {:exit-message (error-msg ["input and output folders are mandatory options"])}
+      {:exit-message (error-msg ["input and output folders are mandatory options. Use --help to get more information."])}
       ;; custom validation on arguments
       (and (= 1 (count arguments))
         (#{"server" "watch" "generate"} (first arguments)))

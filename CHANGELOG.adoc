@@ -1,5 +1,13 @@
 == Changelog
 
+=== [0.1.5] - 2021-06-12
+.Added
+- add inline text to set custom Plantuml values;
+
+.Changed:
+- update deps versions. PlantUML upgraded to 1.2022.5 version, version log4j2 up to 2.17.2
+
+
 === [0.1.4] - 2021-12-13
 .Fixed:
 - output-folder web serving

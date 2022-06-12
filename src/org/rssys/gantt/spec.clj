@@ -79,6 +79,16 @@
     :gen/gen     (gen/elements ["GreenYellow/Red" "#FF0000/FFFF00" "fuchsia"])}
    ne-string])
 
+(def inline-text-begin
+  [:and
+   {:description "PlantUML custom values"}
+   ne-string])
+
+(def inline-text-end
+  [:and
+   {:description "PlantUML custom values"}
+   ne-string])
+
 
 (def tasks-colors
   [:map
@@ -329,6 +339,8 @@
     [:closed-days {:optional true} closed-days]
     [:holidays {:optional true} holidays]
     [:today {:optional true} today]
+    [:inline-text-begin {:optional true} inline-text-begin]
+    [:inline-text-end {:optional true} inline-text-end]
     [:project-content project-content]
     [:milestones {:optional true} [:vector {:gen/min 1, :gen/max 3} milestone]]]
    [:fn {:error/message ":project-scale or :project-scale-zoom must present, but only one of them."}

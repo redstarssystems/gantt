@@ -12,6 +12,15 @@
       FileFormatOption
       SourceStringReader)))
 
+(defn inline-text-begin
+  [content]
+  (when (:inline-text-begin content)
+    (format "\n%s\n" (:inline-text-begin content))))
+
+(defn inline-text-end
+  [content]
+  (when (:inline-text-end content)
+    (format "\n%s\n" (:inline-text-end content))))
 
 (defn project-starts-at
   [content]
@@ -284,6 +293,7 @@
   Returns EDN structure."
   [gantt-struc]
   (-> []
+    (conj (inline-text-begin gantt-struc))
     (conj (project-starts-at gantt-struc))
     (conj (scale gantt-struc))
     (conj (project-title gantt-struc))
@@ -303,6 +313,7 @@
     (conj \newline)
     (into (remove nil? (for [task (task-colored gantt-struc)] task)))
     (into (for [milestone (milestones gantt-struc)] milestone))
+    (conj (inline-text-end gantt-struc))
     (conj \newline)))
 
 

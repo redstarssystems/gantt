@@ -13,7 +13,7 @@ image:doc/programming-clojure-plan.edn.svg[Demo plan]
 
 == Quick Intro
 
-This program (named `gantt`) is based on link:https://github.com/plantuml/plantuml[PlantUML] v1.2021.14. +
+This program (named `gantt`) is based on link:https://github.com/plantuml/plantuml[PlantUML] v1.2022.5. +
 
 Program `gantt` uses some subset of PlantUML Gantt syntax to describe a project, its structure, and progress. +
 
@@ -74,7 +74,7 @@ Options:
   -s, --server HOST           localhost  start HTTP server using this hostname
   -i, --input-folder FOLDER              Input folder with EDN-files
   -f, --file-format FORMAT    png        PNG or SVG format for output files
-  -o, --output-folder FOLDER             Output folder to write Gantt diagrams
+  -o, --output-folder FOLDER             Output folder to write Gantt diagrams. Use value `:input-folder` to put result in the input folder.
       --delete-puml                      Delete intermediate `puml` file
   -h, --help
 
@@ -429,6 +429,37 @@ A separator is a horizontal line with some description:
 [source, clojure]
 ----
 {:project-content [{:separator "Stage1"}]}
+----
+
+=== Inline text at the beginning
+
+Inline text to set custom Plantuml values. 
+Text will be added at the beginning of the puml-file:
+
+[source, clojure]
+----
+{:inline-text-begin  "<style>
+ganttDiagram {
+  task {
+    BackGroundColor GreenYellow
+    LineColor Green 
+    unstarted {
+      BackGroundColor Fuchsia 
+      LineColor FireBrick
+    }
+  }
+}
+</style>"}
+----
+
+=== Inline text to the end
+
+Inline text to set custom Plantuml values. 
+Text will be added to the end of the puml-file:
+
+[source, clojure]
+----
+{:inline-text-end  "[learn-clojure-site] links to [[http://www.clojure.org]]"}
 ----
 
 
