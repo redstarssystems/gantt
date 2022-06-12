@@ -290,7 +290,7 @@ If you want to change locale to Russian then just add:
 ----
 :inline-text-begin "language ru"
 ----
-
+You can choose the language of the Gantt calendar, with the language <xx> command where <xx> is the ISO 639 code of the language.
 By default, `gantt` will take locale from the operating system (default JVM locale).
 
 === Colors
