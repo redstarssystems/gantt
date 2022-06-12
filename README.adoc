@@ -547,6 +547,14 @@ To set clickable URL use `:links-to` property and string URL as a value.
                     :percent-complete 100}]
 }
 ----
+You can use SVG in asciidoc file to make URL clickable from `*.adoc` file.
+----
+image:target/test-data/programming-clojure-plan.edn.svg[opts=interactive]
+
+'or
+
+image:target/test-data/programming-clojure-plan.edn.svg[Clojure plan, 900,opts=inline]
+----
 
 ==== Fixed start
 
