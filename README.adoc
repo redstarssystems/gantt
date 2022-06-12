@@ -481,6 +481,7 @@ Task spec: +
 [:map
          [:task task-name]
          [:alias task-alias]
+         [:links-to {:optional true} task-links-to]
          [:percent-complete task-percent-complete]
          [:color {:optional true} color]
          [:resources {:optional true} [:vector {:gen/min 1, :gen/max 3} task-resource]]
@@ -529,6 +530,23 @@ This will produce the following picture: +
 
 image:doc/examples/resources.edn.svg[resources]
 
+
+==== Task URL
+
+A task may have a clickable URL (e.g. Jira task) when generating SVG file. 
+To set clickable URL use `:links-to` property and string URL as a value.
+
+[source, clojure]
+----
+{
+ :project-content [{:task             "Learn Clojure.org"
+                    :alias            :learn-clojure-site 
+                    :starts-at        "2021-06-01"
+                    :ends-at          "2021-06-04"
+                    :links-to         "http://www.clojure.org"
+                    :percent-complete 100}]
+}
+----
 
 ==== Fixed start
 

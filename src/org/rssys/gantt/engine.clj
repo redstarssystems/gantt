@@ -261,6 +261,17 @@
             (:percent-complete task)))))))
 
 
+(defn task-link
+  [content]
+  (when (:project-content content)
+    (for [task (:project-content content)]
+      (when (:task task)
+        (when (:links-to task)
+          (format "\n[%s] links to [[%s]]"
+            (name (:alias task))
+            (:links-to task)))))))
+
+
 (defn task-colored
   [content]
   (when (:project-content content)
@@ -312,6 +323,7 @@
     (into (remove nil? (for [task (task-complete gantt-struc)] task)))
     (conj \newline)
     (into (remove nil? (for [task (task-colored gantt-struc)] task)))
+    (into (remove nil? (for [task (task-link gantt-struc)] task)))
     (into (for [milestone (milestones gantt-struc)] milestone))
     (conj (inline-text-end gantt-struc))
     (conj \newline)))

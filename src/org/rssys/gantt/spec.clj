@@ -193,6 +193,11 @@
   [:and {:description "Task end date"}
    string-date])
 
+(def task-links-to
+  [:and {:description "Task URL"
+         :gen/gen     (gen/elements ["http://www.clojure.org" "https://github.com/borkdude/babashka"])}
+   ne-string])
+
 
 (def task-ends-at-start
   [:and {:description "Task ends when another task starts"}
@@ -217,6 +222,7 @@
   [:and [:map
          [:task task-name]
          [:alias task-alias]
+         [:links-to {:optional true} task-links-to]
          [:percent-complete task-percent-complete]
          [:color {:optional true} color]
          [:resources {:optional true} [:vector {:gen/min 1, :gen/max 3} task-resource]]

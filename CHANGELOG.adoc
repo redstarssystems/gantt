@@ -1,5 +1,11 @@
 == Changelog
 
+=== [0.1.6] - 2021-06-12
+.Added
+- task :links-to property to support PlantUML Gantt task `links to` directive. 
+It allows to create a clickable URL (e.g. Jira task) when generating SVG file;
+
+
 === [0.1.5] - 2021-06-12
 .Added
 - add inline text to set custom Plantuml values;
