@@ -79,10 +79,12 @@
     :gen/gen     (gen/elements ["GreenYellow/Red" "#FF0000/FFFF00" "fuchsia"])}
    ne-string])
 
+
 (def inline-text-begin
   [:and
    {:description "PlantUML custom values"}
    ne-string])
+
 
 (def inline-text-end
   [:and
@@ -101,7 +103,8 @@
   [:map
    {:description "Highlight today"}
    [:color {:optional true} color]
-   [:days-after-start  nat-int?]])
+   [:days-after-start  {:optional true} nat-int?]
+   [:date {:optional true} string-date]])
 
 
 (def days-colors
@@ -192,6 +195,7 @@
 (def task-ends-at
   [:and {:description "Task end date"}
    string-date])
+
 
 (def task-links-to
   [:and {:description "Task URL"

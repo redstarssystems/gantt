@@ -7,20 +7,25 @@
     [malli.core :as m]
     [org.rssys.gantt.spec :as spec])
   (:import
+    (java.time
+      LocalDate)
     (net.sourceforge.plantuml
       FileFormat
       FileFormatOption
       SourceStringReader)))
+
 
 (defn inline-text-begin
   [content]
   (when (:inline-text-begin content)
     (format "\n%s\n" (:inline-text-begin content))))
 
+
 (defn inline-text-end
   [content]
   (when (:inline-text-end content)
     (format "\n%s\n" (:inline-text-end content))))
+
 
 (defn project-starts-at
   [content]
@@ -102,9 +107,12 @@
 (defn today
   [content]
   (when (:today content)
-    (if (-> content :today :color)
-      (format "\ntoday is %s day after start and is colored in %s\n" (-> content :today :days-after-start) (-> content :today :color))
-      (format "\ntoday is %s day after start\n" (-> content :today :days-after-start)))))
+    (let [today-str (if (-> content :today :days-after-start)
+                      (str (-> content :today :days-after-start) " day after start")
+                      (or (-> content :today :date) (str (LocalDate/now))))]
+      (if (-> content :today :color)
+        (format "\ntoday is %s and is colored in %s\n" today-str (-> content :today :color))
+        (format "\ntoday is %s\n" today-str)))))
 
 
 (defmulti process-content "process content"

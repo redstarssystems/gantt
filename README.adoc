@@ -9,7 +9,6 @@
 
 image:doc/programming-clojure-plan.edn.svg[Demo plan]
 
-*It is alpha version but it works! Everything is subject to change.*
 
 == Quick Intro
 
@@ -132,7 +131,7 @@ automatically update pictures. Second process – `web server` which is expose _
 
 [source,bash]
 ----
-java -Duser.language=en -Djava.awt.headless=true -jar target/gantt-0.1.4-standalone.jar -f svg -i /Users/mike/projects/planning -o :input-folder --delete-puml server  -s 0.0.0.0
+java -Duser.language=en -Djava.awt.headless=true -jar target/gantt-0.1.8-standalone.jar -f svg -i /Users/mike/projects/planning -o :input-folder --delete-puml server  -s 0.0.0.0
 
 Starting watchdog for folder: /Users/mike/projects/planning
 Running web server on address 0.0.0.0 and port 8080
@@ -378,6 +377,19 @@ To highlight today use flag `:today`: +
 { :today       {:days-after-start 10 :color "#AAF"}}
 ----
 
+or 
+
+[source, clojure]
+----
+{ :today       {:date "2022-07-28" :color "#AAF"}}
+----
+
+or
+
+[source, clojure]
+----
+{ :today       {:color "#AAF"}} ;; will be set to (LocalDate/now) value
+----
 
 === Milestones
 

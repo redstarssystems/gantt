@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.rssys</groupId>
   <artifactId>gantt</artifactId>
-  <version>0.1.7</version>
+  <version>0.1.8</version>
   <name>gantt</name>
   <description>Clojure wrapper for PlantUML Gantt</description>
   <url>https://github.com/FIXME</url>
