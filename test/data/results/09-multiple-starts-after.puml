@@ -1,0 +1,35 @@
+@startgantt
+
+Project starts 2021-05-01
+
+projectscale daily
+
+Saturday are closed
+Sunday are closed
+2021-05-03 is closed
+2021-05-10 is closed
+
+[task1] as [t1] lasts 10 days and starts 2021-05-18
+[task2] as [t2] lasts 7 days and starts 2021-05-20
+[task22] as [t22] lasts 10 days and starts at [t1]'s end
+[t22] starts after [t2]'s end
+
+-- Stage1 --
+
+[task3] as [t3] lasts 10 days and starts 2021-05-18
+[task4] as [t4] lasts 10 days and starts at [t3]'s end
+
+[t1] is 100% completed
+[t2] is 34% completed
+[t22] is 34% completed
+[t3] is 100% completed
+[t4] is 34% completed
+
+[t1] is colored in GreenYellow/Green
+[t2] is colored in GreenYellow/Red
+[t22] is colored in GreenYellow/Red
+[t3] is colored in GreenYellow/Green
+[t4] is colored in GreenYellow/Red
+
+
+@endgantt

@@ -4,7 +4,7 @@
  :project-name org.rssys.gantt
  :group-id     org.rssys
  :artifact-id  gantt
- :git/url      ""
+ :git/url      "https://github.com/redstarssystems/gantt"
  }
 
 

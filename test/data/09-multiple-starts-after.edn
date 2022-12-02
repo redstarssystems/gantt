@@ -1,0 +1,47 @@
+{
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;; example vector of aliases in :starts-after
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ :project-starts  "2021-05-01"
+
+ :project-scale   :daily
+
+ :tasks-colors    {:color/in-progress "GreenYellow/Red"
+                   :color/completed   "GreenYellow/Green"}
+
+ :closed-days     #{:saturday :sunday}
+
+ :holidays        ["2021-05-03" "2021-05-10"]
+
+ :project-content [{:task             "task1"
+                    :alias            :t1
+                    :days-lasts       10
+                    :percent-complete 100
+                    :starts-at        "2021-05-18"}
+
+                   {:task             "task2"
+                    :alias            :t2
+                    :days-lasts       7
+                    :percent-complete 34
+                    :starts-at        "2021-05-20"}
+
+                   {:task             "task22"
+                    :alias            :t22
+                    :days-lasts       10
+                    :percent-complete 34
+                    :starts-after     [:t1 :t2]}
+
+                   {:separator "Stage1"}
+
+                   {:task             "task3"
+                    :alias            :t3
+                    :days-lasts       10
+                    :percent-complete 100
+                    :starts-at        "2021-05-18"}
+
+                   {:task             "task4"
+                    :alias            :t4
+                    :days-lasts       10
+                    :percent-complete 34
+                    :starts-after     [:t3]}
+                   ]}

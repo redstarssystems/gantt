@@ -1,7 +1,8 @@
 (ns org.rssys.gantt.spec
   (:require
     [clojure.spec.gen.alpha :as gen]
-    [clojure.string :as string])
+    [clojure.string :as string]
+    [malli.core :as m])
   (:import
     (java.time
       LocalDate)))
@@ -176,8 +177,11 @@
 
 
 (def task-starts-after
-  [:and {:description "Task alias which triggers start of the current task"}
-   task-alias])
+  [:or
+   [:and {:description "Task alias which triggers start of the current task"}
+    task-alias]
+   [:and {:description "Vector of task alias which triggers start of the current task"}
+    [:vector {:min 1} task-alias]]])
 
 
 (def task-starts-before-end
@@ -362,7 +366,12 @@
 
 (comment
   (require '[malli.generator :as mg])
+  (require '[malli.core :as m])
   (mg/generate gantt-structure)
+  (mg/generate task-starts-after)
+  (m/validate task-starts-after :abc)
+  (m/validate task-starts-after [])
+  (m/validate task-starts-after [:abc])
   (mg/generate project-content)
   (mg/generate project-scale-zoom)
   (me/humanize (m/explain task {:name "task3" :alias :t3 :ends-at "2021-05-18" :percent-complete 0 :starts-after :t1}))

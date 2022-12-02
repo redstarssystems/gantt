@@ -12,7 +12,7 @@ image:doc/programming-clojure-plan.edn.svg[Demo plan]
 
 == Quick Intro
 
-This program (named `gantt`) is based on link:https://github.com/plantuml/plantuml[PlantUML] v1.2022.5. +
+This program (named `gantt`) is based on link:https://github.com/plantuml/plantuml[PlantUML] v1.2022.13. +
 
 Program `gantt` uses some subset of PlantUML Gantt syntax to describe a project, its structure, and progress. +
 
@@ -584,7 +584,7 @@ To set fixed start date use `:starts-at` property and string date as a value.
 ==== Relative start
 
 A task may have a relative start.
-To set relative start use `:starts-after` property with task alias as a value. + 
+To set relative start use `:starts-after` property with task alias as a value or vector of task aliases. + 
 This means that this task will start after other task ends.
 
 [source, clojure]
@@ -593,6 +593,17 @@ This means that this task will start after other task ends.
  :project-content [{:task             "Task2"
                     :alias            :t2
                     :starts-after     :t1 ;; Task2 starts after task :t1 ends
+                    :days-lasts       8
+                    :percent-complete 20}]
+}
+----
+
+[source, clojure]
+----
+{
+ :project-content [{:task             "Task2"
+                    :alias            :t2
+                    :starts-after     [:t0 :t1] ;; Task2 starts after end of tasks :t0 and :t1 
                     :days-lasts       8
                     :percent-complete 20}]
 }

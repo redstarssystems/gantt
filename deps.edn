@@ -1,6 +1,7 @@
 {
- :mvn/repos {"clojars" {:url "https://repo.clojars.org/"}
-             "central" {:url "https://repo1.maven.org/maven2/"}}
+ :mvn/repos {"clojars"       {:url "https://repo.clojars.org/"}
+             "central"       {:url "https://repo1.maven.org/maven2/"}
+             "maven_central" {:url "https://repo.maven.apache.org/maven2/"}}
 
  :paths     ["src" "resources" "target/classes" "java/src"]
 
@@ -8,22 +9,22 @@
              org.clojure/test.check                    {:mvn/version "1.1.1"}
 
              ;; spec
-             metosin/malli                             {:mvn/version "0.8.4"}
+             metosin/malli                             {:mvn/version "0.9.2"}
 
              ;; file processing
-             babashka/fs                               {:mvn/version "0.1.6"}
+             babashka/fs                               {:mvn/version "0.2.12"}
 
              ;; PlantUML
-             net.sourceforge.plantuml/plantuml         {:mvn/version "1.2022.5"}
+             net.sourceforge.plantuml/plantuml         {:mvn/version "1.2022.13"}
 
              ;; file changes events
              hawk/hawk                                 {:mvn/version "0.2.11"}
 
              ;; web server
-             ring/ring-core                            {:mvn/version "1.9.5"}
-             ring/ring-jetty-adapter                   {:mvn/version "1.9.5"}
-             ring/ring-defaults                        {:mvn/version "0.3.3"}
-             ring/ring-devel                           {:mvn/version "1.9.5"}
+             ring/ring-core                            {:mvn/version "1.9.6"}
+             ring/ring-jetty-adapter                   {:mvn/version "1.9.6"}
+             ring/ring-defaults                        {:mvn/version "0.3.4"}
+             ring/ring-devel                           {:mvn/version "1.9.6"}
 
              ;;web router
              metosin/reitit                            {:mvn/version "0.5.18"}
@@ -33,12 +34,12 @@
 
 
              ;; Command-line processing
-             org.clojure/tools.cli                     {:mvn/version "1.0.206"}
+             org.clojure/tools.cli                     {:mvn/version "1.0.214"}
 
              ;;logging
              io.pedestal/pedestal.log                  {:mvn/version "0.5.10"}
-             org.apache.logging.log4j/log4j-core       {:mvn/version "2.17.2"}
-             org.apache.logging.log4j/log4j-slf4j-impl {:mvn/version "2.17.2"}
+             org.apache.logging.log4j/log4j-core       {:mvn/version "2.19.0"}
+             org.apache.logging.log4j/log4j-slf4j-impl {:mvn/version "2.19.0"}
              }
 
  :aliases   {
@@ -47,25 +48,25 @@
                                       ]
                         :main-opts   ["--main" "org.rssys.gantt.core"]}
 
-             :repl     {:extra-deps  {nrepl/nrepl          {:mvn/version "0.9.0"}
+             :repl     {:extra-deps  {nrepl/nrepl          {:mvn/version "1.0.0"}
                                       healthsamurai/matcho {:mvn/version "0.3.9"}
                                       criterium/criterium  {:mvn/version "0.4.6"}
-                                      hashp/hashp          {:mvn/version "0.2.1"}}
+                                      hashp/hashp          {:mvn/version "0.2.2"}}
                         :extra-paths ["dev/src" "resources" "test" "test/resources"]
                         :jvm-opts    []
                         :main-opts   ["--main" "nrepl.cmdline"]}
 
              :test     {:extra-deps  {org.clojure/test.check        {:mvn/version "1.1.1"}
                                       healthsamurai/matcho          {:mvn/version "0.3.9"}
-                                      lambdaisland/kaocha           {:mvn/version "1.66.1034"}
-                                      lambdaisland/kaocha-cloverage {:mvn/version "1.0.75"}}
+                                      lambdaisland/kaocha           {:mvn/version "1.71.1119"}
+                                      lambdaisland/kaocha-cloverage {:mvn/version "1.1.89"}}
                         :extra-paths ["resources" "test" "test/resources"]
                         :jvm-opts    []
                         :main-opts   ["--main" "kaocha.runner"]}
 
              :jar      {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.303"}}
                         :exec-fn      hf.depstar/jar
-                        :jvm-opts    []
+                        :jvm-opts     []
                         :exec-args    {:jar        "gantt.jar"
                                        :aot        true
                                        :exclude    [".*org.rssys.gantt.*\\.clj" ".*\\.java"]

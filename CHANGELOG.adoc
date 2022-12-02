@@ -1,5 +1,10 @@
 == Changelog
 
+=== [0.1.9] - 2022-12-02
+
+- update all deps to their latest versions;
+- add support of multiple task aliases for :starts-after.
+
 === [0.1.8] - 2022-07-28
 
 - now today support usual date via :date keyword, not only days after start. If any ommitted then will be set to `(LocalDate/now)` value.

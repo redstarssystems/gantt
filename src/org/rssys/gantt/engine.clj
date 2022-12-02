@@ -210,11 +210,24 @@
 
 (defmethod process-task [:days-lasts :starts-after]
   [task]
-  (format "\n[%s] as [%s] lasts %s days and starts at [%s]'s end"
-    (:task task)
-    (name (:alias task))
-    (:days-lasts task)
-    (name (:starts-after task))))
+  (if (vector? (:starts-after task))
+    (apply str
+      (into []
+       (concat
+         [(format "\n[%s] as [%s] lasts %s days and starts at [%s]'s end"
+            (:task task)
+            (name (:alias task))
+            (:days-lasts task)
+            (name (first (:starts-after task))))]
+         (for [a (drop 1 (:starts-after task))]
+           (format "\n[%s] starts after [%s]'s end"
+             (name (:alias task))
+             (name a))))))
+    (format "\n[%s] as [%s] lasts %s days and starts at [%s]'s end"
+     (:task task)
+     (name (:alias task))
+     (:days-lasts task)
+     (name (:starts-after task)))))
 
 
 (defmethod process-task [:days-lasts :starts-before-end]
@@ -442,6 +455,10 @@
   (write-content->file (gantt-content->asciidoc-content content) "08-project-scale-zoom.adoc")
   (write-content->file (gantt-content->puml-content content) "08-project-scale-zoom.puml")
 
+  (def gantt-struc (read-gantt-struct "test/data/09-multiple-starts-after.edn"))
+  (def content (make-gantt-content gantt-struc))
+  (write-content->file (gantt-content->asciidoc-content content) "09-multiple-starts-after.adoc")
+  (write-content->file (gantt-content->puml-content content) "09-multiple-starts-after.puml")
 
   (generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :svg)
   (generate-gantt-picture "test/data/results/ex04-header-title-footer.puml" :img-format :png :output-folder "./test")
