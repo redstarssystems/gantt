@@ -131,7 +131,7 @@ automatically update pictures. Second process – `web server` which is expose _
 
 [source,bash]
 ----
-java -Duser.language=en -Djava.awt.headless=true -jar target/gantt-0.1.8-standalone.jar -f svg -i /Users/mike/projects/planning -o :input-folder --delete-puml server  -s 0.0.0.0
+java -Duser.language=en -Djava.awt.headless=true -jar target/gantt-0.1.9-standalone.jar -f svg -i /Users/mike/projects/planning -o :input-folder --delete-puml server  -s 0.0.0.0
 
 Starting watchdog for folder: /Users/mike/projects/planning
 Running web server on address 0.0.0.0 and port 8080
